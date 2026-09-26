@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 用于在 View 的 tag 上暂存原始高度，避免 insets 回调重复累加 -->
+    <item name="edge_to_edge_base_height" type="id" />
+</resources>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
 
     <style name="Theme.Poetry" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="colorPrimary">@color/color_blue_500</item>
@@ -8,8 +8,17 @@
         <item name="colorSecondary">@color/color_blue_300</item>
         <item name="colorSecondaryVariant">@color/color_blue_500</item>
         <item name="colorOnSecondary">@color/white</item>
-        <item name="android:statusBarColor" tools:targetApi="l">@color/color_blue_700</item>
         <item name="android:windowBackground">@color/background_window</item>
+
+        <!--
+          系统栏设为透明，由 util/EdgeToEdgeCallbacks 按 insets 让位：
+          工具栏会把蓝色背景延伸到状态栏区域，因此状态栏用白色图标；
+          页面主体是浅色，导航栏用深色图标。
+        -->
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar">true</item>
     </style>
 
     <style name="Toolbar.Poetry" parent="Widget.MaterialComponents.Toolbar.Primary">
