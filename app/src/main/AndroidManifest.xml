@@ -200,6 +200,7 @@
         <!-- 定制微件的配置页，由系统在添加微件时拉起 -->
         <activity
             android:name=".widget.CustomPoetryWidgetActivity"
+            android:exported="true"
             android:theme="@style/Theme.Poetry">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
