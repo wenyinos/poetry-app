@@ -31,13 +31,27 @@
 
 构建产物：`app/build/outputs/apk/release/app-release.apk`。
 
-> **安装前必须先卸载官方原版诗鲸。**
-> 本工程使用 debug 签名，与官方签名（`CN=javayhu`）不同，Android 不允许签名不一致的
-> 同包名应用互相覆盖 —— 这一点无法绕过（官方私钥不可得）。
-> 版本号已设为 `versionCode 92 / versionName 4.0.2`，均高于官方的 `91 / 4.0.1`，
-> 若日后改用自建签名分发，可直接覆盖升级。
+> **首次安装必须先卸载官方原版诗鲸。** 本工程的签名与官方（`CN=javayhu`）不同，
+> Android 不允许签名不一致的同包名应用互相覆盖 —— 官方私钥不可得，无法绕过。
+> 版本号为 `versionCode 93 / versionName 4.0.3`，高于官方的 `91 / 4.0.1`。
+>
+> **从 v4.0.3 起，后续版本可直接覆盖升级**：CI 使用固定的发布密钥签名，
+> 不再依赖每次构建都会重新生成的 debug 密钥。
 
-正式分发前请替换为自建 keystore（见 `app/build.gradle.kts` 的 `signingConfig`）。
+### 发布签名
+
+CI 从以下 Secrets 读取密钥；缺失时回退 debug 签名（那样每次构建的签名都不同，
+升级必须卸载重装）：
+
+| Secret | 说明 |
+| --- | --- |
+| `KEYSTORE_BASE64` | 密钥库文件的 base64 内容 |
+| `KEYSTORE_PASSWORD` | 密钥库密码 |
+| `KEY_ALIAS` | 密钥别名 |
+| `KEY_PASSWORD` | 密钥密码 |
+
+密钥库文件与密码**不在仓库内**，由维护者离线保管。**丢失后将无法再发布可覆盖
+升级的新版本**，请务必备份。
 
 ## 数据源配置
 
