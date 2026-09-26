@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_sync"
+        android:icon="@drawable/ic_cloud_done_white_24dp"
+        android:title="@string/favorite_sync"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/action_webdav_settings"
+        android:icon="@drawable/ic_settings_white_24dp"
+        android:title="@string/favorite_menu_settings"
+        app:showAsAction="always" />
+</menu>

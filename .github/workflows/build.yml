@@ -1,0 +1,63 @@
+name: Build APK
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      data_base_url:
+        description: '云端数据地址（dist/remote 上传后的公共前缀）；留空则仅用内置数据'
+        required: false
+        default: ''
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      # compileSdk 36 对应的平台与构建工具需要显式安装
+      - name: Install SDK components
+        run: sdkmanager "platforms;android-36" "build-tools;36.0.0" "platform-tools"
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Build release APK
+        env:
+          DATA_BASE_URL: ${{ github.event.inputs.data_base_url }}
+        run: |
+          # 未手动填写数据地址时沿用 gradle.properties 里的默认值，
+          # 避免用空值覆盖掉仓库内的配置
+          if [ -n "$DATA_BASE_URL" ]; then
+            ./gradlew assembleRelease --no-daemon --stacktrace \
+              -Ppoetry.dataBaseUrl="$DATA_BASE_URL"
+          else
+            ./gradlew assembleRelease --no-daemon --stacktrace
+          fi
+
+      - name: Show output
+        if: always()
+        run: ls -lh app/build/outputs/apk/release/ || true
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: shijing-release-apk
+          path: app/build/outputs/apk/release/*.apk
+          if-no-files-found: error
