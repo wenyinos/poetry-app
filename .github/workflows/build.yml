@@ -3,16 +3,18 @@ name: Build APK
 on:
   push:
     branches: [main, master]
+    tags: ['v*']
   pull_request:
   workflow_dispatch:
     inputs:
       data_base_url:
-        description: '云端数据地址（dist/remote 上传后的公共前缀）；留空则仅用内置数据'
+        description: '云端数据地址；留空则使用 gradle.properties 中的默认值'
         required: false
         default: ''
 
+# 推送 v* 标签时需要创建 Release，因此需要写权限
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build:
@@ -35,14 +37,10 @@ jobs:
         run: |
           set -uo pipefail
           SDK_ROOT="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-/usr/local/lib/android/sdk}}"
-          echo "SDK root: $SDK_ROOT"
           SDKMANAGER="$SDK_ROOT/cmdline-tools/latest/bin/sdkmanager"
           if [ ! -x "$SDKMANAGER" ]; then
             SDKMANAGER=$(find "$SDK_ROOT" -name sdkmanager -type f 2>/dev/null | head -1)
           fi
-          echo "sdkmanager: $SDKMANAGER"
-          echo "--- 预装 platform ---"
-          ls "$SDK_ROOT/platforms" 2>/dev/null || true
           yes | "$SDKMANAGER" --licenses > /dev/null 2>&1 || true
           "$SDKMANAGER" "platforms;android-36" "build-tools;36.0.0"
 
@@ -62,13 +60,43 @@ jobs:
             ./gradlew assembleRelease --no-daemon --stacktrace
           fi
 
-      - name: Show output
-        if: always()
-        run: ls -lh app/build/outputs/apk/release/ || true
+      - name: Rename APK
+        run: |
+          cd app/build/outputs/apk/release
+          if [[ "${GITHUB_REF}" == refs/tags/* ]]; then
+            NAME="shijing-${GITHUB_REF_NAME}.apk"
+          else
+            NAME="shijing-${GITHUB_SHA::7}.apk"
+          fi
+          mv app-release.apk "$NAME"
+          ls -lh "$NAME"
 
-      - name: Upload APK
+      - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
-          name: shijing-release-apk
+          name: shijing-apk
           path: app/build/outputs/apk/release/*.apk
           if-no-files-found: error
+
+      # 推送 v* 标签时创建 Release，APK 作为附件 —— 无需登录 GitHub 即可下载
+      - name: Publish Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: app/build/outputs/apk/release/*.apk
+          generate_release_notes: true
+          body: |
+            ## 诗鲸 · 离线重写版 ${{ github.ref_name }}
+
+            下载下方 APK 直接安装。使用 debug 签名，与官方原版诗鲸签名不同，
+            **安装前请先卸载原版**。
+
+            **功能**
+            - 内置全部 72,417 首诗词索引、5,764 条名句、热门 5000 首正文，**断网可读**
+            - 冷门诗词按需从 jsDelivr 拉取，一次下载覆盖 1000 首并永久缓存
+            - 桌面小组件（3 小时自动更换，支持锁屏与自由缩放）
+            - 收藏：本地存储 + WebDAV 同步（数据存您自己的网盘，不需要账号）
+
+            **规格**：minSdk 28（Android 9）/ targetSdk 36；纯 Kotlin，支持 64 位
+
+            **数据来源**：[libpoetry/poetry-1](https://github.com/libpoetry/poetry-1)（GPL-3.0）
