@@ -40,7 +40,10 @@
     <string name="setting_favorite">我的收藏</string>
     <string name="setting_favorite_hint">本地保存，可同步到 WebDAV</string>
     <string name="setting_widget">桌面微件</string>
-    <string name="setting_widget_hint">长按桌面 → 微件 → 诗鲸，共 7 款</string>
+    <string name="widget_pick_title">选择微件样式</string>
+    <string name="widget_pin_unsupported">当前桌面不支持一键添加。\n请长按桌面空白处 → 微件 → 诗鲸，手动选择样式</string>
+    <string name="widget_pin_failed">添加失败，请长按桌面手动添加</string>
+    <string name="setting_widget_hint">一键添加到桌面，共 7 款样式</string>
     <string name="setting_webdav">WebDAV 同步</string>
     <string name="setting_webdav_hint">把收藏同步到自己的网盘</string>
     <string name="setting_cache">清理已下载的诗词</string>
