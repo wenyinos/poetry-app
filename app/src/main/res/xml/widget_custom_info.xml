@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
-    android:description="@string/widget_desc_default"
-    android:initialLayout="@layout/widget_poetry"
+    android:description="@string/widget_desc_custom"
+    android:initialLayout="@layout/widget_poetry_custom"
     android:minHeight="40dp"
     android:minWidth="250dp"
-    android:previewImage="@drawable/widget_one_line"
+    android:previewImage="@drawable/widget_custom_3hours"
     android:resizeMode="horizontal|vertical"
     android:updatePeriodMillis="10800000"
+    android:configure="me.javayhu.poetry.widget.CustomPoetryWidgetActivity"
     android:widgetCategory="home_screen|keyguard" />

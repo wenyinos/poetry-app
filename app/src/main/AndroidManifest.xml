@@ -60,10 +60,21 @@
             android:exported="false"
             android:parentActivityName=".ui.home.HomeActivity" />
 
+        <activity
+            android:name=".ui.explore.ExploreActivity"
+            android:exported="false"
+            android:parentActivityName=".ui.home.HomeActivity" />
+
+        <activity
+            android:name=".ui.recommend.RecommendActivity"
+            android:exported="false"
+            android:parentActivityName=".ui.home.HomeActivity" />
+
+        <!-- 小组件：7 款，配置见各自的 res/xml/*_info.xml -->
         <receiver
             android:name=".widget.PoetryWidgetProvider"
             android:exported="true"
-            android:label="@string/widget_name">
+            android:label="@string/widget_label_default">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -71,6 +82,87 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/poetry_widget_info" />
         </receiver>
+
+        <receiver
+            android:name=".widget.LinesPoetryWidgetProvider"
+            android:exported="true"
+            android:label="@string/widget_label_lines">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_lines_info" />
+        </receiver>
+
+        <receiver
+            android:name=".widget.LightPoetryWidgetProvider"
+            android:exported="true"
+            android:label="@string/widget_label_light">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_light_info" />
+        </receiver>
+
+        <receiver
+            android:name=".widget.DarkPoetryWidgetProvider"
+            android:exported="true"
+            android:label="@string/widget_label_dark">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_dark_info" />
+        </receiver>
+
+        <receiver
+            android:name=".widget.CustomPoetryWidgetProvider"
+            android:exported="true"
+            android:label="@string/widget_label_custom">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_custom_info" />
+        </receiver>
+
+        <receiver
+            android:name=".widget.CustomHourPoetryWidgetProvider"
+            android:exported="true"
+            android:label="@string/widget_label_custom_hour">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_custom_hour_info" />
+        </receiver>
+
+        <receiver
+            android:name=".widget.CustomDayPoetryWidgetProvider"
+            android:exported="true"
+            android:label="@string/widget_label_custom_day">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_custom_day_info" />
+        </receiver>
+
+        <!-- 定制微件的配置页，由系统在添加微件时拉起 -->
+        <activity
+            android:name=".widget.CustomPoetryWidgetActivity"
+            android:theme="@style/Theme.Poetry">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

@@ -14,9 +14,11 @@ import me.javayhu.poetry.data.PoemBrief
 import me.javayhu.poetry.data.PoemRepository
 import me.javayhu.poetry.databinding.ActivityHomeBinding
 import me.javayhu.poetry.ui.favorite.FavoriteActivity
+import me.javayhu.poetry.ui.explore.ExploreActivity
 import me.javayhu.poetry.ui.mingju.MingjuActivity
 import me.javayhu.poetry.ui.poet.PoetListActivity
 import me.javayhu.poetry.ui.poetry.PoetryActivity
+import me.javayhu.poetry.ui.recommend.RecommendActivity
 import me.javayhu.poetry.ui.search.SearchActivity
 import java.util.concurrent.Executors
 
@@ -40,9 +42,11 @@ class HomeActivity : AppCompatActivity() {
         binding.toolbar.setOnMenuItemClickListener { item ->
             val target = when (item.itemId) {
                 R.id.action_search -> SearchActivity::class.java
+                R.id.action_explore -> ExploreActivity::class.java
                 R.id.action_favorites -> FavoriteActivity::class.java
                 R.id.action_poets -> PoetListActivity::class.java
                 R.id.action_mingju -> MingjuActivity::class.java
+                R.id.action_recommend -> RecommendActivity::class.java
                 else -> null
             }
             if (target != null) {

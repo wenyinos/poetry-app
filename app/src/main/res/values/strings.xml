@@ -4,6 +4,34 @@
     <string name="widget_name">诗鲸·诗词</string>
     <string name="widget_description">在桌面显示诗词，每 3 小时自动更换</string>
 
+    <!-- 各款小组件（名称显示在系统的微件选择器里） -->
+    <string name="widget_label_default">诗鲸 · 默认</string>
+    <string name="widget_label_lines">诗鲸 · 多行</string>
+    <string name="widget_label_light">诗鲸 · 浅色</string>
+    <string name="widget_label_dark">诗鲸 · 深色</string>
+    <string name="widget_label_custom">诗鲸 · 定制</string>
+    <string name="widget_label_custom_hour">诗鲸 · 整点</string>
+    <string name="widget_label_custom_day">诗鲸 · 每日</string>
+
+    <string name="widget_desc_default">浅蓝底色，每 3 小时更换</string>
+    <string name="widget_desc_lines">竖排多行，适合放大的微件</string>
+    <string name="widget_desc_light">纯白底色，适配浅色桌面</string>
+    <string name="widget_desc_dark">深色底白字，适配深色桌面</string>
+    <string name="widget_desc_custom">配色与字号可自行设置，每 3 小时更换</string>
+    <string name="widget_desc_custom_hour">配色与字号可自行设置，每小时更换</string>
+    <string name="widget_desc_custom_day">配色与字号可自行设置，每天更换</string>
+
+    <!-- 定制微件配置页 -->
+    <string name="title_widget_config">定制微件</string>
+    <string name="widget_config_preview">预览</string>
+    <string name="widget_config_preview_content">山不在高，有仙则名。水不在深，有龙则灵。</string>
+    <string name="widget_config_preview_source">陋室铭 · 刘禹锡</string>
+    <string name="widget_config_color">配色</string>
+    <string name="widget_config_size">字号</string>
+    <string name="widget_config_show_source">显示出处</string>
+    <string name="widget_config_done">完成</string>
+    <string name="widget_config_size_label">%1$d 号</string>
+
     <string name="mingju_hint">轻触换一句</string>
     <string name="home_featured">热门诗词</string>
     <string name="home_loading">正在整理诗库…</string>
@@ -86,4 +114,17 @@
     <string name="title_mingju">名句精选</string>
     <string name="mingju_empty">暂无名句</string>
     <string name="mingju_count">共 %1$d 条名句</string>
+
+    <!-- 探索筛选 -->
+    <string name="title_explore">诗词筛选</string>
+    <string name="filter_dynasty">朝代</string>
+    <string name="filter_tag">标签</string>
+    <string name="filter_any">不限</string>
+    <string name="filter_result">共 %1$d 首</string>
+    <string name="filter_empty">没有符合条件的诗词\n换个条件试试</string>
+
+    <!-- 推荐 -->
+    <string name="title_recommend">诗词推荐</string>
+    <string name="action_shuffle">换一批</string>
+    <string name="recommend_hint">每次进入都会换一批，从最受欢迎的诗词中随机选取</string>
 </resources>
