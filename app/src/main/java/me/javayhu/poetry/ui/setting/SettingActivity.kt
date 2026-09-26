@@ -144,6 +144,25 @@ class SettingActivity : AppCompatActivity() {
         val providerClass: Class<*>,
     )
 
+    private companion object {
+        /** 可添加的小组件样式，顺序与系统微件列表保持一致 */
+        val WIDGETS = listOf(
+            WidgetEntry(R.string.widget_label_default, PoetryWidgetProvider::class.java),
+            WidgetEntry(R.string.widget_label_lines, LinesPoetryWidgetProvider::class.java),
+            WidgetEntry(R.string.widget_label_light, LightPoetryWidgetProvider::class.java),
+            WidgetEntry(R.string.widget_label_dark, DarkPoetryWidgetProvider::class.java),
+            WidgetEntry(R.string.widget_label_custom, CustomPoetryWidgetProvider::class.java),
+            WidgetEntry(
+                R.string.widget_label_custom_hour,
+                CustomHourPoetryWidgetProvider::class.java,
+            ),
+            WidgetEntry(
+                R.string.widget_label_custom_day,
+                CustomDayPoetryWidgetProvider::class.java,
+            ),
+        )
+    }
+
     private fun toast(message: String) =
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
 
