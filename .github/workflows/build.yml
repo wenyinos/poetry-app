@@ -48,15 +48,21 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
 
       # 使用固定的发布密钥，保证每次构建出来的 APK 签名一致、可以覆盖升级。
-      # 未配置 Secret 时跳过，构建回退到 debug 签名 —— 注意 CI 上的 debug
-      # 密钥每次都会重新生成，那样每次升级都得先卸载旧版。
+      # 未配置 Secret 时回退到 debug 签名 —— 注意 CI 上的 debug 密钥每次都会
+      # 重新生成，那样每次升级都得先卸载旧版。
+      #
+      # 这里用 run 内部判断而不是 step 的 if：secrets 上下文不保证能在 if 里使用，
+      # 放在 if 中会导致整个 workflow 解析失败。
       - name: Decode signing keystore
-        if: ${{ secrets.KEYSTORE_BASE64 != '' }}
         env:
           KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
         run: |
-          echo "$KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/release.jks"
-          echo "keystore 已解码：$(stat -c%s "$RUNNER_TEMP/release.jks") 字节"
+          if [ -n "$KEYSTORE_BASE64" ]; then
+            printf '%s' "$KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/release.jks"
+            echo "签名密钥已解码：$(stat -c%s "$RUNNER_TEMP/release.jks") 字节"
+          else
+            echo "未配置签名密钥，本次使用 debug 签名"
+          fi
 
       - name: Build release APK
         env:
