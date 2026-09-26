@@ -1,7 +1,7 @@
 # 诗鲸 · 离线重写版（Android 客户端）
 
-原「诗鲸」App 已停止维护、源码不可得（详见上级目录 [README.md](../README.md)）。
-本工程用其开源诗词数据库与从原 APK 恢复的配色、图标、小组件参数重写为**原生 Kotlin 应用**，
+原「诗鲸」App 已停止维护、源码不可得（来龙去脉见 [背景说明](docs/background.md)）。
+本工程用其开源诗词数据库与从原 APK 恢复的配色、图标、微件参数重写为**原生 Kotlin 应用**，
 支持纯离线阅读。
 
 ## 技术参数
@@ -29,7 +29,14 @@
 
 也可以在 Actions 页面手动触发 `workflow_dispatch`，并填入数据源地址（见下节）。
 
-构建产物：`app/build/outputs/apk/release/app-release.apk`，使用 debug 签名，可直接安装。
+构建产物：`app/build/outputs/apk/release/app-release.apk`。
+
+> **安装前必须先卸载官方原版诗鲸。**
+> 本工程使用 debug 签名，与官方签名（`CN=javayhu`）不同，Android 不允许签名不一致的
+> 同包名应用互相覆盖 —— 这一点无法绕过（官方私钥不可得）。
+> 版本号已设为 `versionCode 92 / versionName 4.0.2`，均高于官方的 `91 / 4.0.1`，
+> 若日后改用自建签名分发，可直接覆盖升级。
+
 正式分发前请替换为自建 keystore（见 `app/build.gradle.kts` 的 `signingConfig`）。
 
 ## 数据源配置
@@ -148,24 +155,37 @@ poetry.dataBaseUrl=https://your-cdn.example.com/data
 
 ```
 app/src/main/
-├── assets/local/                    内置数据（gzip + JSONL）
+├── assets/local/                    内置数据（纯文本 JSONL，交由 APK 自行压缩）
 ├── java/me/javayhu/poetry/
 │   ├── PoetryApp.kt                 Application，提供全局 Context
 │   ├── data/
 │   │   ├── Models.kt                数据模型
 │   │   ├── LocalDataSource.kt       内置数据读取（逐行解析，常驻内存）
-│   │   ├── RemoteDataSource.kt      云端分片下载与缓存
-│   │   ├── PoemRepository.kt        取诗统一入口（本地 → 云端 → 索引兜底）
+│   │   ├── RemoteDataSource.kt      云端分片下载与缓存（诗词 + 诗人）
+│   │   ├── PoemRepository.kt        取诗入口（本地 → 云端 → 索引兜底）
+│   │   ├── PoetRepository.kt        诗人列表、作品数聚合与详情
+│   │   ├── DiscoveryRepository.kt   搜索 / 筛选 / 推荐
+│   │   ├── TopicRepository.kt       专题（热门 / 朝代 / 标签）
 │   │   ├── FavoriteStore.kt         收藏的本地持久化
 │   │   ├── WebDavClient.kt          WebDAV 客户端（零依赖）
 │   │   └── FavoriteRepository.kt    收藏入口 + 同步策略
 │   ├── ui/
-│   │   ├── home/                    首页与列表
-│   │   ├── poetry/                  诗词详情（含收藏按钮）
+│   │   ├── splash/                  启动页
+│   │   ├── home/                    首页与诗词列表适配器
+│   │   ├── poetry/                  诗词详情（收藏 + 分享入口）
+│   │   ├── poet/                    诗人列表与详情
+│   │   ├── search/                  搜索（三档模式）
+│   │   ├── explore/                 朝代 / 标签筛选
+│   │   ├── recommend/               随机推荐
+│   │   ├── topic/                   专题列表与详情
+│   │   ├── mingju/                  名句精选
 │   │   ├── favorite/                收藏列表
-│   │   └── setting/                 WebDAV 同步设置
-│   └── widget/                      桌面小组件
-└── res/                             布局、配色（沿用原版鲸鱼蓝色阶）、图标、文案
+│   │   ├── share/                   分享图生成与分享
+│   │   ├── setting/                 设置、WebDAV 配置
+│   │   └── about/                   关于
+│   ├── widget/                      7 款桌面微件（基类 + 配置 + 渲染）
+│   └── util/PoemImageRenderer.kt    Canvas 渲染竖版分享图
+└── res/                             布局、配色（原版鲸鱼蓝色阶）、图标、文案
 ```
 
 ## 数据来源与许可
