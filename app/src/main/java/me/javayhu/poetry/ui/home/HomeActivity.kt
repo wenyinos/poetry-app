@@ -7,6 +7,7 @@ import android.os.Looper
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import me.javayhu.poetry.R
 import me.javayhu.poetry.data.LocalDataSource
 import me.javayhu.poetry.data.Mingju
 import me.javayhu.poetry.data.PoemBrief

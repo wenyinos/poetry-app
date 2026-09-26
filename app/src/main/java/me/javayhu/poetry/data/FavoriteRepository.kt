@@ -158,7 +158,13 @@ object FavoriteRepository {
         return runSync { _, remote -> remote?.items ?: emptyList() }
     }
 
-    private inline fun runSync(
+    /**
+     * 同步主流程。[resolve] 决定如何合并本地与远端（远端不存在时为 null）。
+     *
+     * 这里刻意不用 inline：lambda 会在 try-catch 内被调用，而 inline 参数
+     * 不允许出现在 try-catch 中（编译器会要求 crossinline）。
+     */
+    private fun runSync(
         resolve: (FavoriteStore.Snapshot, FavoriteStore.Snapshot?) -> List<Favorite>,
     ): SyncResult {
         val config = loadConfig()
