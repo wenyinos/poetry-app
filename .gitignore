@@ -10,3 +10,8 @@ captures/
 *.apk
 *.aab
 output.json
+
+# 签名密钥（绝不入库）
+*.jks
+*.keystore
+keystore.b64

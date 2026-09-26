@@ -47,9 +47,24 @@ jobs:
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
 
+      # 使用固定的发布密钥，保证每次构建出来的 APK 签名一致、可以覆盖升级。
+      # 未配置 Secret 时跳过，构建回退到 debug 签名 —— 注意 CI 上的 debug
+      # 密钥每次都会重新生成，那样每次升级都得先卸载旧版。
+      - name: Decode signing keystore
+        if: ${{ secrets.KEYSTORE_BASE64 != '' }}
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+        run: |
+          echo "$KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/release.jks"
+          echo "keystore 已解码：$(stat -c%s "$RUNNER_TEMP/release.jks") 字节"
+
       - name: Build release APK
         env:
           DATA_BASE_URL: ${{ github.event.inputs.data_base_url }}
+          KEYSTORE_PATH: ${{ runner.temp }}/release.jks
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: |
           # 未手动填写数据地址时沿用 gradle.properties 里的默认值，
           # 避免用空值覆盖掉仓库内的配置

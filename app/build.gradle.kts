@@ -13,6 +13,22 @@ android {
     namespace = "me.javayhu.poetry"
     compileSdk = 36
 
+    signingConfigs {
+        // 发布密钥从环境变量读取（CI 上由 GitHub Secrets 注入）。
+        // 未提供时该配置不会创建，构建回退到 debug 签名 ——
+        // 但 CI 上的 debug 密钥每次构建都会重新生成，那样升级必须卸载重装，
+        // 所以正式分发务必配置 KEYSTORE_PATH / KEYSTORE_PASSWORD / KEY_ALIAS / KEY_PASSWORD。
+        val keystorePath = System.getenv("KEYSTORE_PATH")
+        if (!keystorePath.isNullOrBlank() && file(keystorePath).exists()) {
+            create("release") {
+                storeFile = file(keystorePath)
+                storePassword = System.getenv("KEYSTORE_PASSWORD")
+                keyAlias = System.getenv("KEY_ALIAS")
+                keyPassword = System.getenv("KEY_PASSWORD")
+            }
+        }
+    }
+
     defaultConfig {
         applicationId = "me.javayhu.poetry"
         minSdk = 28          // Android 9
@@ -30,11 +46,11 @@ android {
 
     buildTypes {
         release {
+            // 有固定密钥就用它，保证后续版本能直接覆盖升级；否则回退 debug
+            signingConfig = signingConfigs.findByName("release")
+                ?: signingConfigs.getByName("debug")
             isMinifyEnabled = true
             isShrinkResources = true
-            // 个人使用：沿用 debug 签名以便直接安装。
-            // 若要上架或分发给他人，请替换为自建 keystore。
-            signingConfig = signingConfigs.getByName("debug")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
