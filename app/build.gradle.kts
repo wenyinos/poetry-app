@@ -53,11 +53,9 @@ android {
         buildConfig = true
     }
 
-    androidResources {
-        // assets 内数据已是 gzip，避免被 APK 二次压缩
-        noCompress += listOf("gz")
-    }
-
+    // 注意：assets 里的内置数据必须是纯文本（不带 .gz 后缀）。
+    // AAPT2 会在打包时自动解压以 .gz 结尾的 assets，运行时读到的就不是 gzip 流了。
+    // 纯文本交给 APK 自身压缩即可，实测压缩效果与 gzip 相当。
     packaging {
         resources.excludes += setOf(
             "META-INF/*.kotlin_module",

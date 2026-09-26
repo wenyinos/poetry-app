@@ -5,13 +5,16 @@ import org.json.JSONObject
 import java.io.BufferedReader
 import java.io.InputStream
 import java.io.InputStreamReader
-import java.util.zip.GZIPInputStream
 
 /**
  * 内置数据的读取入口。
  *
- * 数据以 gzip + JSONL（每行一条记录）存放在 assets/local/ 下。逐行解析后立即
- * 丢弃原始 JSON 对象，避免为 7 万条索引构建巨型 JSONArray 造成的内存峰值。
+ * 数据以 JSONL（每行一条记录）存放在 assets/local/ 下，逐行解析后立即丢弃
+ * 原始 JSON 对象，避免为 7 万条索引构建巨型 JSONArray 造成的内存峰值。
+ *
+ * 注意：这里**不是** gzip 流。以 .gz 结尾的 assets 会被 AAPT2 在打包时自动
+ * 解压，因此内置数据直接以纯文本存放，压缩交由 APK 自身完成（实测效果与
+ * gzip 相当），运行时由系统透明解压。云端分片走 HTTP，仍是 gzip。
  *
  * 所有方法都是阻塞的，必须在后台线程调用；结果会常驻内存。
  */
@@ -52,9 +55,9 @@ object LocalDataSource {
     }
 
     private fun open(assetPath: String): InputStream =
-        GZIPInputStream(PoetryApp.appContext.assets.open(assetPath))
+        PoetryApp.appContext.assets.open(assetPath)
 
-    /** 逐行解析 gzip JSONL；stream 由调用方关闭 */
+    /** 逐行解析 JSONL；stream 由调用方关闭 */
     internal fun forEachLine(assetPath: String, action: (JSONObject) -> Unit) {
         open(assetPath).use { gz ->
             BufferedReader(InputStreamReader(gz, Charsets.UTF_8)).use { reader ->
@@ -69,7 +72,7 @@ object LocalDataSource {
 
     private fun loadIndex(): List<PoemBrief> {
         val list = ArrayList<PoemBrief>(73_000)
-        forEachLine("local/index.jsonl.gz") { o ->
+        forEachLine("local/index.jsonl") { o ->
             list.add(
                 PoemBrief(
                     id = o.optInt("i"),
@@ -85,7 +88,7 @@ object LocalDataSource {
 
     private fun loadHot(): Map<Int, PoemContent> {
         val map = HashMap<Int, PoemContent>(6_000)
-        forEachLine("local/hot.jsonl.gz") { o ->
+        forEachLine("local/hot.jsonl") { o ->
             val id = o.optInt("i")
             map[id] = PoemContent(
                 id = id,
@@ -100,7 +103,7 @@ object LocalDataSource {
 
     private fun loadMingju(): List<Mingju> {
         val list = ArrayList<Mingju>(6_000)
-        forEachLine("local/mingju.jsonl.gz") { o ->
+        forEachLine("local/mingju.jsonl") { o ->
             list.add(
                 Mingju(
                     id = o.optInt("id"),
@@ -116,7 +119,7 @@ object LocalDataSource {
 
     private fun loadPoets(): Map<Int, PoetBrief> {
         val map = HashMap<Int, PoetBrief>(3_200)
-        forEachLine("local/poets_index.jsonl.gz") { o ->
+        forEachLine("local/poets_index.jsonl") { o ->
             val id = o.optInt("i")
             map[id] = PoetBrief(
                 id = id,
