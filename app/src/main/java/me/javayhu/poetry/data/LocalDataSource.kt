@@ -25,6 +25,8 @@ object LocalDataSource {
     @Volatile private var mingjuCache: List<Mingju>? = null
     @Volatile private var poetCache: Map<Int, PoetBrief>? = null
     @Volatile private var hotIdsCache: IntArray? = null
+    @Volatile private var tagIndexCache: Map<String, List<Int>>? = null
+    @Volatile private var dynastyCache: List<Pair<String, Int>>? = null
 
     /** 诗词索引，约 7.2 万条 */
     fun index(): List<PoemBrief> = indexCache ?: synchronized(this) {
@@ -42,6 +44,16 @@ object LocalDataSource {
 
     fun poets(): Map<Int, PoetBrief> = poetCache ?: synchronized(this) {
         poetCache ?: loadPoets().also { poetCache = it }
+    }
+
+    /** 标签 → 诗词 id 列表；用于探索页按标签筛选（只有约 7% 的诗词带标签） */
+    fun tagIndex(): Map<String, List<Int>> = tagIndexCache ?: synchronized(this) {
+        tagIndexCache ?: loadTagIndex().also { tagIndexCache = it }
+    }
+
+    /** 朝代及其诗词数量，顺序沿用数据源的时序；过少的朝代（<10 首）已滤除 */
+    fun dynasties(): List<Pair<String, Int>> = dynastyCache ?: synchronized(this) {
+        dynastyCache ?: buildDynasties().also { dynastyCache = it }
     }
 
     /** 随机取一首内置诗词；无数据时返回 null。小组件与启动页用它保证离线可用 */
@@ -129,5 +141,27 @@ object LocalDataSource {
             )
         }
         return map
+    }
+
+    private fun loadTagIndex(): Map<String, List<Int>> {
+        val map = HashMap<String, List<Int>>(64)
+        forEachLine("local/tag_index.jsonl") { o ->
+            val tag = o.optString("t")
+            val arr = o.optJSONArray("ids") ?: return@forEachLine
+            val ids = ArrayList<Int>(arr.length())
+            for (i in 0 until arr.length()) ids.add(arr.optInt(i))
+            if (tag.isNotEmpty()) map[tag] = ids
+        }
+        return map
+    }
+
+    private fun buildDynasties(): List<Pair<String, Int>> {
+        val counter = LinkedHashMap<String, Int>()
+        for (p in index()) {
+            if (p.dynasty.isEmpty()) continue
+            counter[p.dynasty] = (counter[p.dynasty] ?: 0) + 1
+        }
+        // 少于 10 首的朝代没有筛选价值，滤掉以减少噪音
+        return counter.entries.filter { it.value >= 10 }.map { it.key to it.value }
     }
 }

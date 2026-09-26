@@ -59,4 +59,31 @@
     <string name="webdav_download_confirm">本机现有的收藏将被云端收藏替换，确定继续吗？</string>
     <string name="confirm">确定</string>
     <string name="cancel">取消</string>
+
+    <!-- 搜索（沿用原版的三档模式：默认/作者/诗文） -->
+    <string name="title_search">搜索诗词</string>
+    <string name="search_hint">输入关键词</string>
+    <string name="search_mode_title">诗名</string>
+    <string name="search_mode_author">作者</string>
+    <string name="search_mode_content">诗文</string>
+    <string name="search_empty">没有找到相关诗词\n换个关键词试试</string>
+    <string name="search_result_count">找到 %1$d 首</string>
+    <string name="search_hint_content">诗文检索只覆盖内置的热门诗词，其余需联网获取正文</string>
+
+    <!-- 诗人 -->
+    <string name="title_poet_list">诗人</string>
+    <string name="title_poet">诗人简介</string>
+    <string name="title_poet_search">搜索诗人</string>
+    <string name="poet_works">作品 %1$d 首</string>
+    <string name="poet_empty">暂无该诗人的资料</string>
+    <string name="poet_search_empty">没有找到相关诗人</string>
+    <string name="poet_offline_only">该诗人的生平资料尚未包含在内置数据中\n配置数据源后可在线获取</string>
+    <string name="poet_fetch_failed">未能获取生平资料，请检查网络后重试</string>
+    <string name="poet_not_found">未收录这位诗人的资料</string>
+    <string name="poet_tap_hint">点击作者可查看诗人简介</string>
+
+    <!-- 名句 -->
+    <string name="title_mingju">名句精选</string>
+    <string name="mingju_empty">暂无名句</string>
+    <string name="mingju_count">共 %1$d 条名句</string>
 </resources>

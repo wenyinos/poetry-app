@@ -1,5 +1,6 @@
 package me.javayhu.poetry.ui.poetry
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -12,7 +13,9 @@ import me.javayhu.poetry.data.FavoriteRepository
 import me.javayhu.poetry.data.PoemBrief
 import me.javayhu.poetry.data.PoemContent
 import me.javayhu.poetry.data.PoemRepository
+import me.javayhu.poetry.data.PoetRepository
 import me.javayhu.poetry.databinding.ActivityPoetryBinding
+import me.javayhu.poetry.ui.poet.PoetActivity
 import java.util.concurrent.Executors
 
 /** 诗词详情页：内置热门直接命中，其余按分片从云端取回并缓存 */
@@ -24,6 +27,9 @@ class PoetryActivity : AppCompatActivity() {
 
     /** 当前展示的诗，用于收藏；正文未取回时退回索引里的概要信息 */
     private var favoriteTarget: PoemBrief? = null
+
+    /** 当前作者名，用于跳转诗人页 */
+    private var currentAuthor: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,6 +49,8 @@ class PoetryActivity : AppCompatActivity() {
             }
         }
         binding.progress.visibility = View.VISIBLE
+        // 点作者名查看诗人简介
+        binding.poetryMeta.setOnClickListener { openPoet() }
 
         io.execute {
             val result = PoemRepository.getPoem(id)
@@ -60,11 +68,13 @@ class PoetryActivity : AppCompatActivity() {
             is PoemRepository.Result.Full -> {
                 val p = result.poem
                 favoriteTarget = PoemBrief(p.id, p.name, p.author, p.dynasty, 0)
+                currentAuthor = p.author
                 bind(p)
             }
             is PoemRepository.Result.Brief -> {
                 val brief = result.brief
                 favoriteTarget = brief
+                currentAuthor = brief.author
                 binding.poetryTitle.text = brief.name
                 binding.poetryMeta.text = meta(brief.dynasty, brief.author)
                 binding.poetryContent.text = getString(
@@ -146,6 +156,27 @@ class PoetryActivity : AppCompatActivity() {
 
     private fun meta(dynasty: String, author: String): String =
         listOf(dynasty, author).filter { it.isNotEmpty() }.joinToString(" · ")
+
+    /** 诗词索引里只有作者姓名，按名字反查诗人条目再跳转 */
+    private fun openPoet() {
+        val author = currentAuthor
+        if (author.isEmpty()) return
+        io.execute {
+            val poet = PoetRepository.findByName(author)
+            main.post {
+                if (isFinishing) return@post
+                if (poet == null) {
+                    toast(getString(R.string.poet_not_found))
+                } else {
+                    startActivity(
+                        Intent(this, PoetActivity::class.java)
+                            .putExtra(PoetActivity.EXTRA_ID, poet.id)
+                            .putExtra(PoetActivity.EXTRA_NAME, poet.name)
+                    )
+                }
+            }
+        }
+    }
 
     private fun toast(message: String) =
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()

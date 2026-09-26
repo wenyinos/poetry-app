@@ -53,3 +53,26 @@ data class Favorite(
     val dynasty: String,
     val addedAt: Long,
 )
+
+/** 诗人详情，来自云端分片（内置的只有 [PoetBrief] 索引） */
+data class PoetDetail(
+    val id: Int,
+    val name: String,
+    val dynasty: String,
+    val desc: String,
+    val content: String,
+    val image: String,
+    val star: Int,
+)
+
+/** 搜索模式，对应原版的「默认 / 作者 / 诗文」三档 */
+enum class SearchMode {
+    /** 按诗名搜 */
+    TITLE,
+
+    /** 按作者搜 */
+    AUTHOR,
+
+    /** 按正文搜（仅覆盖内置的热门集） */
+    CONTENT,
+}

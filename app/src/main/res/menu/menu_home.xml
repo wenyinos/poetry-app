@@ -2,8 +2,21 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/action_search"
+        android:icon="@drawable/ic_search_white_24dp"
+        android:title="@string/title_search"
+        app:showAsAction="always" />
+    <item
         android:id="@+id/action_favorites"
         android:icon="@drawable/ic_star_white_24dp"
         android:title="@string/title_favorite"
         app:showAsAction="always" />
+    <item
+        android:id="@+id/action_poets"
+        android:title="@string/title_poet_list"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_mingju"
+        android:title="@string/title_mingju"
+        app:showAsAction="never" />
 </menu>

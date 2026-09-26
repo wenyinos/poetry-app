@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 诗人详情头部，作为列表第一个条目与作品列表拼接 -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingStart="20dp"
+    android:paddingTop="20dp"
+    android:paddingEnd="20dp"
+    android:paddingBottom="8dp">
+
+    <TextView
+        android:id="@+id/poetName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/color_text_title"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        tools:text="李白" />
+
+    <TextView
+        android:id="@+id/poetMeta"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:textColor="@color/color_text_default"
+        android:textSize="14sp"
+        tools:text="唐代 · 作品 1123 首" />
+
+    <TextView
+        android:id="@+id/poetDesc"
+        style="@style/TextAppearance.Poetry.PoemBody"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        tools:text="李白（701年－762年），字太白，号青莲居士……" />
+
+    <TextView
+        android:id="@+id/poetContent"
+        style="@style/TextAppearance.Poetry.PoemBody"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="18dp"
+        android:background="@color/color_divider" />
+
+    <TextView
+        android:id="@+id/worksTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:textColor="@color/color_blue_600"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        tools:text="作品 200 首" />
+</LinearLayout>

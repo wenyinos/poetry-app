@@ -18,6 +18,9 @@ import java.util.zip.GZIPInputStream
 object RemoteDataSource {
 
     const val SLICE_SIZE = 1000
+
+    /** 诗人分片比诗词小得多，每 300 位一片 */
+    const val POET_SLICE_SIZE = 300
     private const val TIMEOUT_MS = 20_000
 
     /** 是否配置了数据源；未配置时只能读内置数据 */
@@ -96,5 +99,45 @@ object RemoteDataSource {
             tags = tags,
             poetId = o.optInt("pi"),
         )
+    }
+
+    // ---------------- 诗人 ----------------
+
+    private fun poetCacheFile(slice: Int): File =
+        File(PoetryApp.appContext.filesDir, "poets/t%03d.jsonl.gz".format(slice))
+
+    fun isPoetCached(id: Int): Boolean = poetCacheFile(id / POET_SLICE_SIZE).exists()
+
+    /**
+     * 取诗人详情（简介与生平）：命中缓存不发请求，否则下载所属分片
+     * （一片约 0.6 MB，覆盖 300 位诗人）。阻塞方法，须在后台线程调用。
+     */
+    fun getPoet(id: Int): PoetDetail? {
+        val file = poetCacheFile(id / POET_SLICE_SIZE)
+        if (!file.exists()) {
+            if (!isConfigured) return null
+            if (!download("$baseUrl/poets/${file.name}", file)) return null
+        }
+        return readPoetFrom(file, id)
+    }
+
+    private fun readPoetFrom(file: File, wantId: Int): PoetDetail? {
+        GZIPInputStream(file.inputStream()).bufferedReader(Charsets.UTF_8).use { reader ->
+            while (true) {
+                val line = reader.readLine() ?: return null
+                if (line.isEmpty()) continue
+                val o = JSONObject(line)
+                if (o.optInt("i") != wantId) continue
+                return PoetDetail(
+                    id = wantId,
+                    name = o.optString("n"),
+                    dynasty = o.optString("d"),
+                    desc = o.optString("desc"),
+                    content = o.optString("content"),
+                    image = o.optString("image"),
+                    star = o.optInt("s"),
+                )
+            }
+        }
     }
 }

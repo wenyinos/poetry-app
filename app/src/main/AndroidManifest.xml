@@ -39,6 +39,27 @@
             android:exported="false"
             android:parentActivityName=".ui.favorite.FavoriteActivity" />
 
+        <activity
+            android:name=".ui.search.SearchActivity"
+            android:exported="false"
+            android:parentActivityName=".ui.home.HomeActivity"
+            android:windowSoftInputMode="adjustResize|stateVisible" />
+
+        <activity
+            android:name=".ui.poet.PoetListActivity"
+            android:exported="false"
+            android:parentActivityName=".ui.home.HomeActivity" />
+
+        <activity
+            android:name=".ui.poet.PoetActivity"
+            android:exported="false"
+            android:parentActivityName=".ui.home.HomeActivity" />
+
+        <activity
+            android:name=".ui.mingju.MingjuActivity"
+            android:exported="false"
+            android:parentActivityName=".ui.home.HomeActivity" />
+
         <receiver
             android:name=".widget.PoetryWidgetProvider"
             android:exported="true"
