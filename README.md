@@ -32,7 +32,7 @@
 构建产物：`app/build/outputs/apk/release/app-release.apk`，使用 debug 签名，可直接安装。
 正式分发前请替换为自建 keystore（见 `app/build.gradle.kts` 的 `signingConfig`）。
 
-## 数据源配置（可选）
+## 数据源配置
 
 `assets/local/` 内置 2.6 MB 数据，覆盖：
 
@@ -41,24 +41,42 @@
 - **5,764 条**名句、3,154 位诗人索引
 - 桌面小组件内容取自内置数据，**断网也能显示**
 
-其余冷门诗词的正文（含译文、赏析、创作背景）约 34 MB，建议上传到静态托管后按需拉取。
-`dist/remote/` 里的文件按 `poetryId` 区间切片，客户端用 `id / 1000` 直接定位，
+其余冷门诗词的正文（含译文、赏析、创作背景）放在本仓库的 `data/` 目录下，
+共 34.4 MB，经 **jsDelivr** 分发按需拉取：
+
+```
+https://cdn.jsdelivr.net/gh/wenyinos/poetry-app@main/data
+```
+
+该地址已写入 `gradle.properties` 的 `poetry.dataBaseUrl`，构建时自动带上，
+**无需额外配置**。分片按 `poetryId` 区间切分，客户端用 `id / 1000` 直接定位，
 一次下载（单片约 0.4 MB）覆盖 1000 首，之后永久缓存。
 
-配置方式任选其一：
+需要换托管地址时（例如迁到 Cloudflare R2 或国内 OSS），二选一：
 
 ```bash
-# 方式一：命令行 / workflow_dispatch 输入
-./gradlew assembleRelease -Ppoetry.dataBaseUrl=https://your-cdn.example.com/remote
+# 方式一：改 gradle.properties
+poetry.dataBaseUrl=https://your-cdn.example.com/data
 
-# 方式二：写进 gradle.properties
-poetry.dataBaseUrl=https://your-cdn.example.com/remote
+# 方式二：命令行 / workflow_dispatch 输入（临时覆盖，不落盘）
+./gradlew assembleRelease -Ppoetry.dataBaseUrl=https://your-cdn.example.com/data
 ```
 
 留空则只使用内置数据，冷门诗词会提示「尚未包含在内置数据中」。
 
-托管可选项：Cloudflare R2（10 GB 存储 + **出流量免费**）、jsDelivr + GitHub 仓库（零门槛）、
-国内 OSS（速度最快）。客户端只依赖这一个地址，换平台改一处即可。
+### jsDelivr 说明
+
+**jsDelivr 不需要任何凭证** —— 无需注册、无需 API key、无需 token。
+它只要求仓库是 **public**（本仓库已满足），之后直接代理仓库内的文件。
+
+| 事项 | 说明 |
+|---|---|
+| URL 格式 | `https://cdn.jsdelivr.net/gh/<用户>/<仓库>@<版本>/<路径>` |
+| 版本标识 | `@main` 分支（缓存 12 小时）；`@v1.0` 标签或 commit 哈希（永久缓存） |
+| 单文件上限 | 20 MB（本项目最大分片约 1 MB） |
+| 强制刷新缓存 | 请求 `https://purge.jsdelivr.net/gh/wenyinos/poetry-app@main/data/<路径>` |
+
+诗词数据是静态的、基本不会变动，因此 `@main` 的 12 小时缓存不构成问题。
 
 ## 当前实现范围
 
