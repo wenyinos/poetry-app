@@ -122,11 +122,29 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
-                android:layout_marginBottom="24dp"
                 android:lineSpacingMultiplier="1.5"
                 android:text="@string/about_origin_content"
                 android:textColor="@color/color_text_body"
                 android:textSize="14sp" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="22dp"
+                android:text="@string/about_license_title"
+                android:textColor="@color/color_blue_600"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="24dp"
+                android:lineSpacingMultiplier="1.5"
+                android:text="@string/about_license_content"
+                android:textColor="@color/color_text_body"
+                android:textSize="14sp" />
+
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

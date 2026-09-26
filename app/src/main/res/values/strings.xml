@@ -61,6 +61,8 @@
     <string name="about_offline_content">内置全部 72,417 首诗词的索引、5,764 条名句与热门 5,000 首正文，断网也能浏览与搜索。其余诗词的正文（含译文与赏析）会在您打开时按需下载并永久缓存，每个分片约 0.4 MB、覆盖 1,000 首。</string>
     <string name="about_origin_title">来源说明</string>
     <string name="about_origin_content">原「诗鲸」App 已停止维护、源码丢失，作者账号亦已注销。本应用基于其公开的数据仓库与从原 APK 中恢复的界面资源重写而成，仅供学习与个人使用。</string>
+    <string name="about_license_title">开源许可</string>
+    <string name="about_license_content">本项目以 GNU General Public License v3.0 发布。诗词数据的派生作品需以相同许可分发，因此本项目同样开源；源码随应用一同提供，可自由使用与修改。原 App 的名称与图标版权归原作者所有，不在本许可覆盖范围内。</string>
 
     <!-- 诗词专题 -->
     <string name="title_topic">诗词专题</string>

@@ -188,8 +188,28 @@ app/src/main/
 └── res/                             布局、配色（原版鲸鱼蓝色阶）、图标、文案
 ```
 
-## 数据来源与许可
+## 开源许可
 
-诗词数据来自 [libpoetry/poetry-1](https://github.com/libpoetry/poetry-1)
-（`javayhu/poetry` 的 fork，**GPL-3.0**），原数据 2017 年爬取自古诗文网。
-二次分发请保留 LICENSE 并注明来源。原 App 的名称与图标版权归原作者所有。
+本项目以 **GNU General Public License v3.0** 发布，全文见 [LICENSE](LICENSE)。
+
+之所以采用 GPL-3.0：诗词数据来自 [libpoetry/poetry-1](https://github.com/libpoetry/poetry-1)
+（原 `javayhu/poetry` 的 fork），该数据以 GPL-3.0 授权，其派生作品需以相同许可分发。
+
+- 您可以自由使用、修改、分发本项目，但分发时**须提供完整源码并保留同一许可**
+- 原「诗鲸」App 的名称与图标版权归原作者所有，**不在本许可覆盖范围内**；
+  若要公开发布请改名换标
+- 官方 APK 及其反编译产物请勿公开分发
+
+```
+Copyright (C) 2026  wenyinos
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+```
