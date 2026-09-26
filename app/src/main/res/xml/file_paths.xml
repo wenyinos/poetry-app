@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <!-- 分享图先写到 cacheDir/images，再通过 FileProvider 交给其它应用 -->
+    <cache-path
+        name="share_images"
+        path="images/" />
+</paths>

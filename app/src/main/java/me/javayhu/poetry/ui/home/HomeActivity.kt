@@ -20,6 +20,8 @@ import me.javayhu.poetry.ui.poet.PoetListActivity
 import me.javayhu.poetry.ui.poetry.PoetryActivity
 import me.javayhu.poetry.ui.recommend.RecommendActivity
 import me.javayhu.poetry.ui.search.SearchActivity
+import me.javayhu.poetry.ui.setting.SettingActivity
+import me.javayhu.poetry.ui.topic.TopicActivity
 import java.util.concurrent.Executors
 
 class HomeActivity : AppCompatActivity() {
@@ -47,6 +49,8 @@ class HomeActivity : AppCompatActivity() {
                 R.id.action_poets -> PoetListActivity::class.java
                 R.id.action_mingju -> MingjuActivity::class.java
                 R.id.action_recommend -> RecommendActivity::class.java
+                R.id.action_topic -> TopicActivity::class.java
+                R.id.action_settings -> SettingActivity::class.java
                 else -> null
             }
             if (target != null) {

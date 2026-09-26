@@ -14,15 +14,21 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Poetry">
 
+        <!-- 启动页承担入口，首页要解析 7 万条索引，正好用这段时间做过渡 -->
         <activity
-            android:name=".ui.home.HomeActivity"
+            android:name=".ui.splash.SplashActivity"
             android:exported="true"
-            android:launchMode="singleTask">
+            android:theme="@style/Theme.Poetry">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".ui.home.HomeActivity"
+            android:exported="false"
+            android:launchMode="singleTask" />
 
         <activity
             android:name=".ui.poetry.PoetryActivity"
@@ -69,6 +75,42 @@
             android:name=".ui.recommend.RecommendActivity"
             android:exported="false"
             android:parentActivityName=".ui.home.HomeActivity" />
+
+        <activity
+            android:name=".ui.topic.TopicActivity"
+            android:exported="false"
+            android:parentActivityName=".ui.home.HomeActivity" />
+
+        <activity
+            android:name=".ui.topic.TopicDetailActivity"
+            android:exported="false"
+            android:parentActivityName=".ui.topic.TopicActivity" />
+
+        <activity
+            android:name=".ui.share.ShareActivity"
+            android:exported="false"
+            android:parentActivityName=".ui.home.HomeActivity" />
+
+        <activity
+            android:name=".ui.setting.SettingActivity"
+            android:exported="false"
+            android:parentActivityName=".ui.home.HomeActivity" />
+
+        <activity
+            android:name=".ui.about.AboutActivity"
+            android:exported="false"
+            android:parentActivityName=".ui.setting.SettingActivity" />
+
+        <!-- 分享图通过 FileProvider 授权给其它应用读取 -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
 
         <!-- 小组件：7 款，配置见各自的 res/xml/*_info.xml -->
         <receiver

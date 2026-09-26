@@ -16,6 +16,7 @@ import me.javayhu.poetry.data.PoemRepository
 import me.javayhu.poetry.data.PoetRepository
 import me.javayhu.poetry.databinding.ActivityPoetryBinding
 import me.javayhu.poetry.ui.poet.PoetActivity
+import me.javayhu.poetry.ui.share.ShareActivity
 import java.util.concurrent.Executors
 
 /** 诗词详情页：内置热门直接命中，其余按分片从云端取回并缓存 */
@@ -41,11 +42,16 @@ class PoetryActivity : AppCompatActivity() {
         binding.toolbar.setNavigationOnClickListener { finish() }
         binding.toolbar.inflateMenu(R.menu.menu_poetry)
         binding.toolbar.setOnMenuItemClickListener { item ->
-            if (item.itemId == R.id.action_favorite) {
-                toggleFavorite()
-                true
-            } else {
-                false
+            when (item.itemId) {
+                R.id.action_favorite -> {
+                    toggleFavorite()
+                    true
+                }
+                R.id.action_share -> {
+                    openShare()
+                    true
+                }
+                else -> false
             }
         }
         binding.progress.visibility = View.VISIBLE
@@ -157,9 +163,16 @@ class PoetryActivity : AppCompatActivity() {
     private fun meta(dynasty: String, author: String): String =
         listOf(dynasty, author).filter { it.isNotEmpty() }.joinToString(" · ")
 
+    /** 打开分享页，把这首诗渲染成竖版图片 */
+    private fun openShare() {
+        val target = favoriteTarget ?: return
+        startActivity(
+            Intent(this, ShareActivity::class.java).putExtra(ShareActivity.EXTRA_ID, target.id)
+        )
+    }
+
     /** 诗词索引里只有作者姓名，按名字反查诗人条目再跳转 */
-    private fun openPoet() {
-        val author = currentAuthor
+    private fun openPoet() {        val author = currentAuthor
         if (author.isEmpty()) return
         io.execute {
             val poet = PoetRepository.findByName(author)

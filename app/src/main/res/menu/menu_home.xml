@@ -17,15 +17,23 @@
         android:title="@string/title_favorite"
         app:showAsAction="always" />
     <item
-        android:id="@+id/action_poets"
-        android:title="@string/title_poet_list"
+        android:id="@+id/action_topic"
+        android:title="@string/title_topic"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_mingju"
         android:title="@string/title_mingju"
         app:showAsAction="never" />
     <item
+        android:id="@+id/action_poets"
+        android:title="@string/title_poet_list"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/action_recommend"
         android:title="@string/title_recommend"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_settings"
+        android:title="@string/title_setting"
         app:showAsAction="never" />
 </menu>

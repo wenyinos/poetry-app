@@ -31,5 +31,6 @@
     <color name="color_theme_bluegrey">#ff607d8b</color>
     <color name="color_theme_green">#ff4caf50</color>
     <color name="color_theme_orange">#ffff9800</color>
+    <color name="color_theme_grey">#ff9e9e9e</color>
     <color name="ic_launcher_background">#ffffffff</color>
 </resources>
