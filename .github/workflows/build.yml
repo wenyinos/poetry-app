@@ -28,12 +28,23 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
 
-      - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
-
-      # compileSdk 36 对应的平台与构建工具需要显式安装
+      # ubuntu runner 已预装 Android SDK，无需 android-actions/setup-android
+      # （该 action 会执行已被移除的 `sdkmanager tools`，与新版 SDK 不兼容）。
+      # 这里只需补齐 compileSdk 对应的 platform 与 build-tools。
       - name: Install SDK components
-        run: sdkmanager "platforms;android-36" "build-tools;36.0.0" "platform-tools"
+        run: |
+          set -uo pipefail
+          SDK_ROOT="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-/usr/local/lib/android/sdk}}"
+          echo "SDK root: $SDK_ROOT"
+          SDKMANAGER="$SDK_ROOT/cmdline-tools/latest/bin/sdkmanager"
+          if [ ! -x "$SDKMANAGER" ]; then
+            SDKMANAGER=$(find "$SDK_ROOT" -name sdkmanager -type f 2>/dev/null | head -1)
+          fi
+          echo "sdkmanager: $SDKMANAGER"
+          echo "--- 预装 platform ---"
+          ls "$SDK_ROOT/platforms" 2>/dev/null || true
+          yes | "$SDKMANAGER" --licenses > /dev/null 2>&1 || true
+          "$SDKMANAGER" "platforms;android-36" "build-tools;36.0.0"
 
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
