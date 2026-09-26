@@ -1,0 +1,11 @@
+{
+ "version": 1,
+ "poemCount": 72417,
+ "poetCount": 3154,
+ "poemSliceSize": 1000,
+ "poemSlices": 74,
+ "maxPoetryId": 73281,
+ "poetSliceSize": 300,
+ "poetSlices": 11,
+ "maxPoetId": 3156
+}
