@@ -19,5 +19,4 @@
     <!-- 小标题用的蓝：夜间提亮以保证深底上的对比度 -->
     <color name="color_blue_600">#ff4fc3f7</color>
 
-    <color name="color_black">#ffffffff</color>
 </resources>
