@@ -1,8 +1,14 @@
 # 诗鲸 · 离线重写版（Android 客户端）
 
+![诗鲸](docs/assets/poster-wide.png)
+
 原「诗鲸」App 已停止维护、源码不可得（来龙去脉见 [背景说明](docs/background.md)）。
 本工程用其开源诗词数据库与从原 APK 恢复的配色、图标、微件参数重写为**原生 Kotlin 应用**，
 支持纯离线阅读。
+
+**在线主页** <https://wenyinos.github.io/poetry-app> ·
+**下载最新版** <https://github.com/wenyinos/poetry-app/releases/latest> ·
+**许可** GPL-3.0
 
 ## 技术参数
 
