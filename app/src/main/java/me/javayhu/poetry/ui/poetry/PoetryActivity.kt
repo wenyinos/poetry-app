@@ -1,14 +1,20 @@
 package me.javayhu.poetry.ui.poetry
 
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.speech.tts.TextToSpeech
+import android.util.TypedValue
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import me.javayhu.poetry.R
+import me.javayhu.poetry.data.AppSettings
 import me.javayhu.poetry.data.FavoriteRepository
 import me.javayhu.poetry.data.PoemBrief
 import me.javayhu.poetry.data.PoemContent
@@ -17,6 +23,7 @@ import me.javayhu.poetry.data.PoetRepository
 import me.javayhu.poetry.databinding.ActivityPoetryBinding
 import me.javayhu.poetry.ui.poet.PoetActivity
 import me.javayhu.poetry.ui.share.ShareActivity
+import java.util.Locale
 import java.util.concurrent.Executors
 
 /** 诗词详情页：内置热门直接命中，其余按分片从云端取回并缓存 */
@@ -31,6 +38,12 @@ class PoetryActivity : AppCompatActivity() {
 
     /** 当前作者名，用于跳转诗人页 */
     private var currentAuthor: String = ""
+
+    /** 完整正文，供复制与朗读使用；只有概要时为空 */
+    private var currentPoem: PoemContent? = null
+
+    private var tts: TextToSpeech? = null
+    private var pendingSpeech: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,8 +68,13 @@ class PoetryActivity : AppCompatActivity() {
             }
         }
         binding.progress.visibility = View.VISIBLE
-        // 点作者名查看诗人简介
+        // 点作者名查看诗人简介；长按正文可复制或朗读
         binding.poetryMeta.setOnClickListener { openPoet() }
+        binding.poetryContent.setOnLongClickListener {
+            showTextActions()
+            true
+        }
+        AppSettings.addBrowseHistory(id)
 
         io.execute {
             val result = PoemRepository.getPoem(id)
@@ -75,6 +93,7 @@ class PoetryActivity : AppCompatActivity() {
                 val p = result.poem
                 favoriteTarget = PoemBrief(p.id, p.name, p.author, p.dynasty, 0)
                 currentAuthor = p.author
+                currentPoem = p
                 bind(p)
             }
             is PoemRepository.Result.Brief -> {
@@ -107,6 +126,70 @@ class PoetryActivity : AppCompatActivity() {
         bindSection(binding.fanyiBlock, binding.fanyiText, p.fanyi)
         bindSection(binding.shangxiBlock, binding.shangxiText, p.shangxi)
         bindSection(binding.aboutBlock, binding.aboutText, p.about)
+        applyFontSize()
+    }
+
+    /** 正文字号取自设置，译文/赏析/背景跟随同一档 */
+    private fun applyFontSize() {
+        val size = AppSettings.bodyTextSize
+        listOf(
+            binding.poetryContent, binding.fanyiText,
+            binding.shangxiText, binding.aboutText,
+        ).forEach { it.setTextSize(TypedValue.COMPLEX_UNIT_SP, size) }
+    }
+
+    // ---------------- 复制与朗读 ----------------
+
+    private fun showTextActions() {
+        if (currentPoem == null) return
+        val actions = arrayOf(
+            getString(R.string.action_copy),
+            getString(R.string.action_read_aloud),
+        )
+        AlertDialog.Builder(this)
+            .setItems(actions) { _, which ->
+                when (which) {
+                    0 -> copyPoem()
+                    1 -> speakPoem()
+                }
+            }
+            .show()
+    }
+
+    private fun copyPoem() {
+        val p = currentPoem ?: return
+        val meta = listOf(p.dynasty, p.author).filter { it.isNotEmpty() }.joinToString(" · ")
+        val text = buildString {
+            append(p.name).append('\n')
+            if (meta.isNotEmpty()) append(meta).append("\n\n")
+            append(p.content)
+        }
+        val manager = getSystemService(ClipboardManager::class.java)
+        manager?.setPrimaryClip(ClipData.newPlainText(p.name, text))
+        toast(getString(R.string.copied))
+    }
+
+    /** 首次调用才初始化 TTS，就绪后再补上待朗读的内容 */
+    private fun speakPoem() {
+        val p = currentPoem ?: return
+        val text = "${p.name}。${listOf(p.dynasty, p.author).filter { it.isNotEmpty() }.joinToString("，")}。${p.content}"
+        val engine = tts
+        if (engine == null) {
+            pendingSpeech = text
+            tts = TextToSpeech(this) { status ->
+                if (status == TextToSpeech.SUCCESS) {
+                    tts?.language = Locale.CHINA
+                    pendingSpeech?.let {
+                        tts?.speak(it, TextToSpeech.QUEUE_FLUSH, null, UTTERANCE_ID)
+                    }
+                } else {
+                    toast(getString(R.string.tts_unavailable))
+                }
+                pendingSpeech = null
+            }
+        } else {
+            engine.speak(text, TextToSpeech.QUEUE_FLUSH, null, UTTERANCE_ID)
+        }
     }
 
     /** 译文/赏析/背景只有约一成诗词具备，空段落整块隐藏 */
@@ -195,11 +278,15 @@ class PoetryActivity : AppCompatActivity() {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
 
     override fun onDestroy() {
+        tts?.stop()
+        tts?.shutdown()
+        tts = null
         io.shutdown()
         super.onDestroy()
     }
 
     companion object {
+        private const val UTTERANCE_ID = "poetry"
         const val EXTRA_ID = "poetry_id"
         const val EXTRA_TITLE = "poetry_title"
     }

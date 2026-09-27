@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  夜间模式配色：只覆盖需要变化的语义色。
+
+  品牌蓝刻意保持不变 —— 工具栏在深浅两种模式下都是同一片鲸鱼蓝，
+  这是应用的识别色。其余背景、表面、文字与分隔线在深色下全部反转。
+-->
+<resources>
+    <color name="background_window">#ff121212</color>
+    <color name="color_surface">#ff1e1e1e</color>
+
+    <color name="color_text_title">#ffe8e8e8</color>
+    <color name="color_text_body">#ffc9c9c9</color>
+    <color name="color_text_default">#ff9e9e9e</color>
+    <color name="color_divider">#33ffffff</color>
+
+    <!-- 首页名句卡片的底：白天是极浅蓝，夜间改为深蓝灰 -->
+    <color name="color_blue_whale_1">#ff16303d</color>
+    <!-- 小标题用的蓝：夜间提亮以保证深底上的对比度 -->
+    <color name="color_blue_600">#ff4fc3f7</color>
+
+    <color name="color_black">#ffffffff</color>
+</resources>

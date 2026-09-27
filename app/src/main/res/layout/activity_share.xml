@@ -33,7 +33,16 @@
                 android:textColor="@color/color_text_default"
                 android:textSize="13sp" />
 
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/templateGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                app:singleLine="true"
+                app:singleSelection="true" />
+
             <LinearLayout
+                android:id="@+id/previewBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"

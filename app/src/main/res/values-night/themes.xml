@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  夜间下的主题：同名的 style 在不同限定符目录里是完整替换而非合并，
+  因此这里要整份重写。与浅色版的差异只有导航栏图标颜色 ——
+  夜间页面是深的，导航栏需要浅色图标，其余保持一致。
+-->
+<resources>
+    <style name="Theme.Poetry" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/color_blue_500</item>
+        <item name="colorPrimaryVariant">@color/color_blue_700</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorSecondary">@color/color_blue_300</item>
+        <item name="colorSecondaryVariant">@color/color_blue_500</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <item name="android:windowBackground">@color/background_window</item>
+
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar">false</item>
+    </style>
+</resources>

@@ -77,6 +77,11 @@
             android:parentActivityName=".ui.home.HomeActivity" />
 
         <activity
+            android:name=".ui.history.HistoryActivity"
+            android:exported="false"
+            android:parentActivityName=".ui.home.HomeActivity" />
+
+        <activity
             android:name=".ui.topic.TopicActivity"
             android:exported="false"
             android:parentActivityName=".ui.home.HomeActivity" />

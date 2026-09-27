@@ -11,7 +11,9 @@ import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.chip.Chip
 import me.javayhu.poetry.R
+import me.javayhu.poetry.data.AppSettings
 import me.javayhu.poetry.data.DiscoveryRepository
 import me.javayhu.poetry.data.PoemBrief
 import me.javayhu.poetry.data.SearchMode
@@ -57,13 +59,24 @@ class SearchActivity : AppCompatActivity() {
         binding.searchInput.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 main.removeCallbacks(debounce)
+                // 只在用户明确按下搜索键时记入历史，避免把输入过程中的
+                // 半截词（「李」「李白」）都存进去
+                AppSettings.addSearchHistory(
+                    binding.searchInput.text?.toString().orEmpty()
+                )
                 performSearch()
                 true
             } else {
                 false
             }
         }
+        binding.clearHistory.setOnClickListener {
+            AppSettings.clearSearchHistory()
+            showHistory()
+        }
+
         binding.searchInput.requestFocus()
+        showHistory()
     }
 
     private fun cycleMode() {
@@ -100,8 +113,10 @@ class SearchActivity : AppCompatActivity() {
             adapter.submit(emptyList())
             binding.resultCount.visibility = View.GONE
             binding.emptyView.visibility = View.GONE
+            showHistory()
             return
         }
+        binding.historyArea.visibility = View.GONE
 
         io.execute {
             val result = DiscoveryRepository.search(query, requestedMode)
@@ -112,6 +127,24 @@ class SearchActivity : AppCompatActivity() {
                 binding.resultCount.visibility = View.VISIBLE
                 binding.emptyView.visibility = if (result.isEmpty()) View.VISIBLE else View.GONE
             }
+        }
+    }
+
+    /** 输入框为空时展示历史词，点击即回填 */
+    private fun showHistory() {
+        val history = AppSettings.searchHistory()
+        binding.historyArea.visibility = if (history.isEmpty()) View.GONE else View.VISIBLE
+        binding.historyGroup.removeAllViews()
+        for (word in history) {
+            val chip = Chip(this).apply {
+                text = word
+                isCheckable = false
+                setOnClickListener {
+                    binding.searchInput.setText(word)
+                    binding.searchInput.setSelection(word.length)
+                }
+            }
+            binding.historyGroup.addView(chip)
         }
     }
 

@@ -23,6 +23,8 @@
     <color name="white">#ffffffff</color>
     <color name="black">#ff000000</color>
     <color name="background_window">#fffafafa</color>
+    <!-- 卡片/输入框等「浮在背景之上」的表面色，夜间会自动变深 -->
+    <color name="color_surface">#ffffffff</color>
     <color name="color_text_default">#ff737373</color>
     <color name="color_text_title">#ff212121</color>
     <color name="color_text_body">#ff37474f</color>

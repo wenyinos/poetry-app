@@ -7,6 +7,14 @@
         android:title="@string/favorite_sync"
         app:showAsAction="always" />
     <item
+        android:id="@+id/action_export"
+        android:title="@string/favorite_export"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_import"
+        android:title="@string/favorite_import"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/action_webdav_settings"
         android:icon="@drawable/ic_settings_white_24dp"
         android:title="@string/favorite_menu_settings"

@@ -33,6 +33,10 @@
         android:title="@string/title_recommend"
         app:showAsAction="never" />
     <item
+        android:id="@+id/action_history"
+        android:title="@string/title_history"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/action_settings"
         android:title="@string/title_setting"
         app:showAsAction="never" />

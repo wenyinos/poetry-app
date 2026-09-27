@@ -14,6 +14,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
+import com.google.android.material.chip.Chip
 import me.javayhu.poetry.R
 import me.javayhu.poetry.data.PoemContent
 import me.javayhu.poetry.data.PoemRepository
@@ -37,6 +38,7 @@ class ShareActivity : AppCompatActivity() {
 
     private var poem: PoemContent? = null
     private var busy = false
+    private var template = PoemImageRenderer.Template.CLASSIC
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,6 +68,7 @@ class ShareActivity : AppCompatActivity() {
             }
         }
 
+        buildTemplates()
         binding.saveButton.setOnClickListener { saveToGallery() }
         binding.shareButton.setOnClickListener { shareImage() }
     }
@@ -86,9 +89,37 @@ class ShareActivity : AppCompatActivity() {
 
     // ---------------- 图片 ----------------
 
+    /** 三套样式，切换时同步刷新预览配色 */
+    private fun buildTemplates() {
+        binding.templateGroup.removeAllViews()
+        for (t in PoemImageRenderer.Template.entries) {
+            val chip = Chip(this).apply {
+                text = t.label
+                isCheckable = true
+                isChecked = t == template
+                setOnClickListener {
+                    template = t
+                    buildTemplates()
+                    applyPreviewColors()
+                }
+            }
+            binding.templateGroup.addView(chip)
+        }
+        applyPreviewColors()
+    }
+
+    /** 预览区直接复用模板配色，所见即所得 */
+    private fun applyPreviewColors() {
+        binding.previewBox.setBackgroundColor(template.bgColor)
+        binding.shareTitle.setTextColor(template.titleColor)
+        binding.shareMeta.setTextColor(template.metaColor)
+        binding.shareContent.setTextColor(template.bodyColor)
+        binding.shareFooter.setTextColor(template.accentColor)
+    }
+
     private fun renderBitmap(): Bitmap? {
         val p = poem ?: return null
-        return PoemImageRenderer.render(p, getString(R.string.app_name))
+        return PoemImageRenderer.render(p, getString(R.string.app_name), template)
     }
 
     private fun saveToGallery() {

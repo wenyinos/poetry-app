@@ -204,6 +204,18 @@ object FavoriteRepository {
         }
     }
 
+    /**
+     * 合并一批外部收藏（导入用）。
+     *
+     * 采用并集而非覆盖：导入不会丢掉本机已有的收藏，重复的按 id 去重。
+     * 返回合并后的总数。
+     */
+    fun mergeIn(items: List<Favorite>): Int {
+        val merged = merge(snapshot().items, items)
+        persist(FavoriteStore.Snapshot(System.currentTimeMillis(), merged))
+        return merged.size
+    }
+
     /** 两边的并集；同一首保留较早的收藏时间 */
     private fun merge(a: List<Favorite>, b: List<Favorite>): List<Favorite> =
         (a + b).groupBy { it.id }

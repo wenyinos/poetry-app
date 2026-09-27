@@ -71,6 +71,52 @@ object RemoteDataSource {
         }
     }
 
+    /** 已缓存的分片数（诗词 + 诗人），用于展示「已下载 N 片」 */
+    fun cachedSliceCount(): Int {
+        val poems = (0 until poemSliceCount()).count { cacheFile(it).exists() }
+        val poets = (0 until poetSliceCount()).count { poetCacheFile(it).exists() }
+        return poems + poets
+    }
+
+    /** 全量分片总数 */
+    fun totalSliceCount(): Int = poemSliceCount() + poetSliceCount()
+
+    private fun poemSliceCount(): Int =
+        (LocalDataSource.index().lastOrNull()?.id ?: 0) / SLICE_SIZE + 1
+
+    private fun poetSliceCount(): Int {
+        val maxId = LocalDataSource.poets().keys.maxOrNull() ?: 0
+        return maxId / POET_SLICE_SIZE + 1
+    }
+
+    /**
+     * 一次性下载全部分片，实现彻底离线。
+     *
+     * 已缓存的分片会跳过，因此可中断后续传。返回失败的片数（0 表示全部成功）；
+     * [onProgress] 在调用线程上回调 (已处理, 总数)，供 UI 更新进度。
+     * 阻塞方法，须在后台线程调用。
+     */
+    fun downloadAll(onProgress: (Int, Int) -> Unit): Int {
+        if (!isConfigured) return -1
+        val total = totalSliceCount()
+        var processed = 0
+        var failed = 0
+
+        for (i in 0 until poemSliceCount()) {
+            processed++
+            onProgress(processed, total)
+            val dest = cacheFile(i)
+            if (!dest.exists() && !download("$baseUrl/poems/${dest.name}", dest)) failed++
+        }
+        for (i in 0 until poetSliceCount()) {
+            processed++
+            onProgress(processed, total)
+            val dest = poetCacheFile(i)
+            if (!dest.exists() && !download("$baseUrl/poets/${dest.name}", dest)) failed++
+        }
+        return failed
+    }
+
     private fun readFrom(file: File, wantId: Int): PoemContent? {
         GZIPInputStream(file.inputStream()).bufferedReader(Charsets.UTF_8).use { reader ->
             while (true) {

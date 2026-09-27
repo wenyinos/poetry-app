@@ -2,6 +2,6 @@
 <!-- 分享图预览的卡片背景 -->
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
-    <solid android:color="@color/white" />
+    <solid android:color="@color/color_surface" />
     <corners android:radius="16dp" />
 </shape>
