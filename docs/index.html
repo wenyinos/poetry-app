@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>诗鲸 · 离线重写版 — 发现诗词之美</title>
+<meta name="description" content="原「诗鲸」App 停止维护、源码丢失后，用开源诗词数据与从原 APK 恢复的界面资源重写的原生 Android 应用。72,417 首诗词离线可读，7 款桌面微件，无账号、无广告、无埋点，GPL-3.0 开源。">
+<meta property="og:type" content="website">
+<meta property="og:title" content="诗鲸 · 离线重写版">
+<meta property="og:description" content="72,417 首诗词离线可读，7 款桌面微件，无账号无广告，GPL-3.0 开源。">
+<meta property="og:image" content="assets/poster-wide.png">
+<link rel="icon" href="assets/logo.png">
+<style>
+  :root {
+    --blue-50: #e1f5fe;
+    --blue-100: #b3e5fc;
+    --blue-300: #4fc3f7;
+    --blue-500: #03a9f4;
+    --blue-700: #0288d1;
+    --blue-900: #01579b;
+    --ink: #212121;
+    --body: #37474f;
+    --muted: #737373;
+    --line: rgba(0, 0, 0, .08);
+    --card: #ffffff;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    color: var(--body);
+    background: #f6f9fc;
+    line-height: 1.75;
+    font-family: "Noto Sans CJK SC", "PingFang SC", "Hiragino Sans GB",
+                 "Microsoft YaHei", system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--blue-700); }
+  .wrap { width: min(1080px, calc(100% - 44px)); margin: 0 auto; }
+
+  /* ---------- Hero ---------- */
+  .hero {
+    background: linear-gradient(160deg, var(--blue-700) 0%, var(--blue-300) 100%);
+    color: #fff;
+    padding: 76px 0 84px;
+    text-align: center;
+  }
+  .hero img.logo { width: 104px; height: 104px; display: block; margin: 0 auto 22px; }
+  .hero h1 { margin: 0; font-size: clamp(40px, 7vw, 64px); letter-spacing: .08em; }
+  .hero .tagline { margin: 10px 0 0; font-size: clamp(16px, 2.4vw, 21px); opacity: .95; }
+  .hero .sub { margin: 6px 0 0; font-size: 15px; opacity: .8; }
+  .hero .lead {
+    max-width: 620px; margin: 26px auto 0; font-size: 15.5px; opacity: .92;
+  }
+  .actions { margin-top: 32px; display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+  .btn {
+    display: inline-block; padding: 13px 30px; border-radius: 999px;
+    font-size: 16px; font-weight: 600; text-decoration: none; transition: .18s;
+  }
+  .btn.primary { background: #fff; color: var(--blue-700); box-shadow: 0 6px 20px rgba(1, 45, 75, .22); }
+  .btn.primary:hover { transform: translateY(-2px); box-shadow: 0 10px 26px rgba(1, 45, 75, .28); }
+  .btn.ghost { border: 1.5px solid rgba(255, 255, 255, .75); color: #fff; }
+  .btn.ghost:hover { background: rgba(255, 255, 255, .14); }
+
+  /* ---------- 通用区块 ---------- */
+  section { padding: 66px 0; }
+  section + section { border-top: 1px solid var(--line); }
+  h2 {
+    margin: 0 0 8px; font-size: 26px; color: var(--ink);
+    display: flex; align-items: center; gap: 10px;
+  }
+  h2::before {
+    content: ""; width: 5px; height: 24px; border-radius: 3px;
+    background: var(--blue-500); display: inline-block;
+  }
+  .section-note { margin: 0 0 32px; color: var(--muted); font-size: 14.5px; }
+
+  /* ---------- 特性 ---------- */
+  .grid { display: grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(268px, 1fr)); }
+  .card {
+    background: var(--card); border-radius: 14px; padding: 24px 24px 22px;
+    box-shadow: 0 2px 14px rgba(2, 60, 100, .07);
+    border: 1px solid rgba(2, 136, 209, .07);
+  }
+  .card h3 { margin: 0 0 8px; font-size: 17px; color: var(--ink); }
+  .card p { margin: 0; font-size: 14.5px; color: var(--body); }
+  .card .num {
+    display: inline-block; font-size: 22px; font-weight: 700;
+    color: var(--blue-700); margin-bottom: 6px;
+  }
+
+  /* ---------- 微件展示 ---------- */
+  .shots { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }
+  .shot {
+    background: var(--card); border-radius: 14px; padding: 14px;
+    box-shadow: 0 2px 14px rgba(2, 60, 100, .07);
+  }
+  .shot img { width: 100%; display: block; border-radius: 8px; }
+  .shot figcaption { margin-top: 10px; font-size: 13.5px; color: var(--muted); text-align: center; }
+  figure { margin: 0; }
+
+  /* ---------- 下载 ---------- */
+  .download-box {
+    background: var(--card); border-radius: 16px; padding: 30px;
+    box-shadow: 0 2px 14px rgba(2, 60, 100, .07);
+  }
+  .download-box .meta { display: flex; flex-wrap: wrap; gap: 10px 26px; margin: 4px 0 22px; font-size: 14.5px; }
+  .download-box .meta b { color: var(--ink); }
+  .note {
+    margin-top: 22px; padding: 15px 18px; border-radius: 10px;
+    background: var(--blue-50); border-left: 4px solid var(--blue-500);
+    font-size: 14px; color: var(--body);
+  }
+  .note strong { color: var(--blue-900); }
+
+  /* ---------- 关于 ---------- */
+  .about-grid { display: grid; gap: 26px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+  .about-grid h3 { margin: 0 0 10px; font-size: 16px; color: var(--ink); }
+  .about-grid p { margin: 0; font-size: 14.5px; }
+
+  /* ---------- 页脚 ---------- */
+  footer {
+    padding: 34px 0 44px; border-top: 1px solid var(--line);
+    font-size: 13.5px; color: var(--muted); text-align: center;
+  }
+  footer a { color: var(--muted); }
+  footer .sep { margin: 0 8px; opacity: .5; }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <img class="logo" src="assets/logo.png" alt="诗鲸">
+    <h1>诗鲸</h1>
+    <p class="tagline">发现诗词之美 · 离线重写版</p>
+    <p class="sub">原版停止维护、源码丢失后的原生重写</p>
+    <p class="lead">
+      72,417 首诗词全文索引、5,764 条名句、热门 5,000 首正文全部内置，
+      断网也能读；冷门诗词按需拉取并永久缓存。无账号、无广告、无埋点。
+    </p>
+    <div class="actions">
+      <a class="btn primary" href="https://github.com/wenyinos/poetry-app/releases/latest">下载 APK</a>
+      <a class="btn ghost" href="https://github.com/wenyinos/poetry-app">查看源码</a>
+    </div>
+  </div>
+</header>
+
+<section id="features">
+  <div class="wrap">
+    <h2>功能</h2>
+    <p class="section-note">原版的功能除打赏与反馈外全部保留，并做了离线化改造。</p>
+    <div class="grid">
+      <div class="card">
+        <div class="num">72,417</div>
+        <h3>首诗词，离线可读</h3>
+        <p>全量索引与热门正文打包进应用，列表、搜索、筛选、名句、专题都不需要联网。</p>
+      </div>
+      <div class="card">
+        <div class="num">7</div>
+        <h3>款桌面微件</h3>
+        <p>默认 / 多行 / 浅色 / 深色 / 定制 / 整点 / 每日，支持锁屏显示与自由缩放，配色字号可自定。</p>
+      </div>
+      <div class="card">
+        <h3>阅读体验完整</h3>
+        <p>译文、赏析、创作背景一应俱全；作者名可点击进入诗人页，查看生平与作品。</p>
+      </div>
+      <div class="card">
+        <h3>收藏不依赖账号</h3>
+        <p>收藏存在本机；配置 WebDAV 后可同步到自己的网盘，多设备共享且数据不经过第三方。</p>
+      </div>
+      <div class="card">
+        <h3>分享图生成</h3>
+        <p>把一首诗渲染成竖版图片，可保存到相册或直接分享给好友。</p>
+      </div>
+      <div class="card">
+        <h3>零后端 · 开源</h3>
+        <p>没有服务器依赖，数据走 jsDelivr 静态分发。GPL-3.0 许可，源码与数据全部公开。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="widgets">
+  <div class="wrap">
+    <h2>桌面微件</h2>
+    <p class="section-note">七款样式，从一句话到多行竖排，放在桌面或锁屏上随时瞥一眼。</p>
+    <div class="shots">
+      <figure class="shot"><img src="assets/widget_one_line.png" alt="默认微件"><figcaption>默认 · 浅蓝底</figcaption></figure>
+      <figure class="shot"><img src="assets/widget_more_lines.png" alt="多行微件"><figcaption>多行 · 竖排更多诗句</figcaption></figure>
+      <figure class="shot"><img src="assets/widget_light.png" alt="浅色微件"><figcaption>浅色 · 适配浅色桌面</figcaption></figure>
+      <figure class="shot"><img src="assets/widget_dark.png" alt="深色微件"><figcaption>深色 · 适配深色桌面</figcaption></figure>
+      <figure class="shot"><img src="assets/widget_custom_hour.png" alt="整点微件"><figcaption>整点 · 每小时更换</figcaption></figure>
+      <figure class="shot"><img src="assets/widget_custom_day.png" alt="每日微件"><figcaption>每日 · 每天更换</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<section id="download">
+  <div class="wrap">
+    <h2>下载安装</h2>
+    <p class="section-note">从 GitHub Releases 获取，无需登录。</p>
+    <div class="download-box">
+      <div class="meta">
+        <span>版本 <b>4.0.3</b></span>
+        <span>体积 <b>约 5 MB</b></span>
+        <span>系统 <b>Android 9 及以上</b></span>
+        <span>架构 <b>支持 64 位</b></span>
+      </div>
+      <a class="btn primary" style="background:var(--blue-500);color:#fff"
+         href="https://github.com/wenyinos/poetry-app/releases/latest">前往下载</a>
+      <div class="note">
+        <strong>首次安装需先卸载官方原版诗鲸。</strong>
+        本应用的签名与官方不同，Android 不允许签名不一致的同包名应用互相覆盖
+        （官方私钥不可得）。从本版起，后续升级可直接覆盖安装。
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="about">
+  <div class="wrap">
+    <h2>关于</h2>
+    <p class="section-note">数据、实现与许可。</p>
+    <div class="about-grid">
+      <div>
+        <h3>为什么会有这个项目</h3>
+        <p>原「诗鲸」App 已于 2020 年后停止维护，作者注销了账号与官网，源码不可得。
+          官方 APK 被腾讯乐固加固，静态反编译只能拿到壳。但加固只保护代码，不保护数据与资源 ——
+          于是选择用开源数据加恢复出的界面资源重写一份。</p>
+      </div>
+      <div>
+        <h3>数据来源</h3>
+        <p>诗词数据来自开源项目
+          <a href="https://github.com/libpoetry/poetry-1">libpoetry/poetry-1</a>
+          （原 javayhu/poetry 的 fork），2017 年整理自古诗文网，
+          共 72,417 首诗词、3,154 位诗人。译文与赏析覆盖约 8%，这是数据源本身的情况。</p>
+      </div>
+      <div>
+        <h3>开源许可</h3>
+        <p>本项目以 <a href="https://github.com/wenyinos/poetry-app/blob/main/LICENSE">GPL-3.0</a>
+          发布，与诗词数据的许可保持一致。原 App 的名称与图标版权归原作者，
+          不在本许可覆盖范围内。</p>
+      </div>
+      <div>
+        <h3>技术实现</h3>
+        <p>原生 Kotlin + XML 布局，仅依赖 AndroidX 与 Material，无第三方 SDK。
+          数据分两层：索引与热门正文随包分发，冷门详情按 1,000 首一片的粒度从
+          jsDelivr 按需拉取。构建全程在 GitHub Actions 完成。</p>
+      </div>
+    </div>
+    <p style="margin-top:26px"><a href="background.md">阅读完整背景说明 →</a></p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <a href="https://github.com/wenyinos/poetry-app">GitHub</a>
+    <span class="sep">·</span>
+    <a href="https://github.com/wenyinos/poetry-app/releases">版本发布</a>
+    <span class="sep">·</span>
+    <a href="background.md">背景说明</a>
+    <span class="sep">·</span>
+    <span>GPL-3.0</span>
+    <p style="margin:10px 0 0">诗词数据版权归原作者与古诗文网所有，本项目仅供学习与个人使用。</p>
+  </div>
+</footer>
+
+</body>
+</html>
