@@ -33,8 +33,8 @@ android {
         applicationId = "me.javayhu.poetry"
         minSdk = 28          // Android 9
         targetSdk = 36       // Android 16（当前最新）
-        versionCode = 94
-        versionName = "4.1.0"
+        versionCode = 95
+        versionName = "4.1.1"
 
         buildConfigField("String", "DATA_BASE_URL", "\"$dataBaseUrl\"")
 
