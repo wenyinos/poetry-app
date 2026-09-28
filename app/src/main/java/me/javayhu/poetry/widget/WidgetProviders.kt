@@ -45,18 +45,6 @@ class LinesPoetryWidgetProvider : BasePoetryWidgetProvider() {
         WidgetSupport.simple(context, R.layout.widget_poetry_lines, 8)
 }
 
-/** 浅色款：纯白背景 */
-class LightPoetryWidgetProvider : BasePoetryWidgetProvider() {
-    override fun render(context: Context, widgetId: Int) =
-        WidgetSupport.simple(context, R.layout.widget_poetry_light, 4)
-}
-
-/** 深色款：深底白字 */
-class DarkPoetryWidgetProvider : BasePoetryWidgetProvider() {
-    override fun render(context: Context, widgetId: Int) =
-        WidgetSupport.simple(context, R.layout.widget_poetry_dark, 4)
-}
-
 /** 定制款：配色与字号可配置，3 小时刷新 */
 class CustomPoetryWidgetProvider : BasePoetryWidgetProvider() {
     override fun render(context: Context, widgetId: Int) =

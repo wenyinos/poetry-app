@@ -25,8 +25,6 @@ import me.javayhu.poetry.ui.favorite.FavoriteActivity
 import me.javayhu.poetry.widget.CustomDayPoetryWidgetProvider
 import me.javayhu.poetry.widget.CustomHourPoetryWidgetProvider
 import me.javayhu.poetry.widget.CustomPoetryWidgetProvider
-import me.javayhu.poetry.widget.DarkPoetryWidgetProvider
-import me.javayhu.poetry.widget.LightPoetryWidgetProvider
 import me.javayhu.poetry.widget.LinesPoetryWidgetProvider
 import me.javayhu.poetry.widget.PoetryWidgetProvider
 import java.io.File
@@ -301,8 +299,6 @@ class SettingActivity : AppCompatActivity() {
         val WIDGETS = listOf(
             WidgetEntry(R.string.widget_label_default, PoetryWidgetProvider::class.java),
             WidgetEntry(R.string.widget_label_lines, LinesPoetryWidgetProvider::class.java),
-            WidgetEntry(R.string.widget_label_light, LightPoetryWidgetProvider::class.java),
-            WidgetEntry(R.string.widget_label_dark, DarkPoetryWidgetProvider::class.java),
             WidgetEntry(R.string.widget_label_custom, CustomPoetryWidgetProvider::class.java),
             WidgetEntry(
                 R.string.widget_label_custom_hour,

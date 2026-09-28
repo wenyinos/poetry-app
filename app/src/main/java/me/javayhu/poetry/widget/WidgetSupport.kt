@@ -49,7 +49,8 @@ object WidgetSupport {
         val config = WidgetConfig.load(context, widgetId)
         val colors = config.colors
 
-        views.setInt(R.id.widget_root, "setBackgroundColor", colors.background)
+        // 底色打在内层：根布局要留给上面那层柔光描边
+        views.setInt(R.id.widget_tint, "setBackgroundColor", colors.background)
         views.setTextColor(R.id.widget_content, colors.content)
         views.setTextColor(R.id.widget_source, colors.source)
         views.setTextViewTextSize(

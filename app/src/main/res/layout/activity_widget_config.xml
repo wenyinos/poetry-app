@@ -33,34 +33,57 @@
                 android:textColor="@color/color_text_default"
                 android:textSize="13sp" />
 
-            <LinearLayout
-                android:id="@+id/previewBox"
+            <!-- 预览框：假壁纸上叠半透明底色，再叠玻璃质感，与桌面上的层次一致 -->
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:background="@drawable/bg_widget_light"
-                android:minHeight="96dp"
-                android:orientation="vertical"
-                android:padding="14dp">
+                android:background="@drawable/bg_widget_preview_wall"
+                android:minHeight="96dp">
 
-                <TextView
-                    android:id="@+id/previewContent"
+                <View
+                    android:id="@+id/previewTint"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/bg_widget_glass_overlay" />
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/widget_config_preview_content"
-                    android:textColor="@color/color_text_body"
-                    android:textSize="14sp" />
+                    android:orientation="vertical"
+                    android:padding="14dp">
 
-                <TextView
-                    android:id="@+id/previewSource"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:gravity="end"
-                    android:text="@string/widget_config_preview_source"
-                    android:textColor="@color/color_text_default"
-                    android:textSize="11sp" />
-            </LinearLayout>
+                    <TextView
+                        android:id="@+id/previewContent"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:shadowColor="#59FFFFFF"
+                        android:shadowDx="0"
+                        android:shadowDy="1"
+                        android:shadowRadius="6"
+                        android:text="@string/widget_config_preview_content"
+                        android:textColor="@color/color_text_body"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/previewSource"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:gravity="end"
+                        android:shadowColor="#59FFFFFF"
+                        android:shadowDx="0"
+                        android:shadowDy="1"
+                        android:shadowRadius="6"
+                        android:text="@string/widget_config_preview_source"
+                        android:textColor="@color/color_text_default"
+                        android:textSize="11sp" />
+                </LinearLayout>
+            </FrameLayout>
 
             <TextView
                 android:layout_width="match_parent"

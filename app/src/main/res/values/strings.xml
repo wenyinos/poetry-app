@@ -7,19 +7,15 @@
     <!-- 各款小组件（名称显示在系统的微件选择器里） -->
     <string name="widget_label_default">诗鲸 · 默认</string>
     <string name="widget_label_lines">诗鲸 · 多行</string>
-    <string name="widget_label_light">诗鲸 · 浅色</string>
-    <string name="widget_label_dark">诗鲸 · 深色</string>
     <string name="widget_label_custom">诗鲸 · 定制</string>
     <string name="widget_label_custom_hour">诗鲸 · 整点</string>
     <string name="widget_label_custom_day">诗鲸 · 每日</string>
 
     <string name="widget_desc_default">浅蓝底色，每 3 小时更换</string>
     <string name="widget_desc_lines">竖排多行，适合放大的微件</string>
-    <string name="widget_desc_light">纯白底色，适配浅色桌面</string>
-    <string name="widget_desc_dark">深色底白字，适配深色桌面</string>
-    <string name="widget_desc_custom">配色与字号可自行设置，每 3 小时更换</string>
-    <string name="widget_desc_custom_hour">配色与字号可自行设置，每小时更换</string>
-    <string name="widget_desc_custom_day">配色与字号可自行设置，每天更换</string>
+    <string name="widget_desc_custom">无色 / 浅蓝 / 深色 / 米黄四套透明配色，字号可调，每 3 小时更换</string>
+    <string name="widget_desc_custom_hour">四套透明配色与字号可自行设置，每小时更换</string>
+    <string name="widget_desc_custom_day">四套透明配色与字号可自行设置，每天更换</string>
 
     <!-- 定制微件配置页 -->
     <string name="title_widget_config">定制微件</string>
@@ -57,7 +53,7 @@
     <string name="widget_pick_title">选择微件样式</string>
     <string name="widget_pin_unsupported">当前桌面不支持一键添加。\n请长按桌面空白处 → 微件 → 诗鲸，手动选择样式</string>
     <string name="widget_pin_failed">添加失败，请长按桌面手动添加</string>
-    <string name="setting_widget_hint">一键添加到桌面，共 7 款样式</string>
+    <string name="setting_widget_hint">一键添加到桌面，共 5 款样式</string>
     <string name="setting_webdav">WebDAV 同步</string>
     <string name="setting_webdav_hint">把收藏同步到自己的网盘</string>
     <string name="setting_download_all">下载全部诗词</string>

@@ -6,6 +6,14 @@ import android.graphics.Color
 /**
  * 「定制微件」的每实例配置。
  *
+ * 四套配色都是半透明的：微件由桌面进程渲染，拿不到壁纸也就做不了真模糊，
+ * 于是用半透明底色 + 布局里的静态柔光层（bg_widget_glass_overlay）做出磨砂
+ * 玻璃的观感，桌面壁纸从底下透出来。
+ *
+ * 不透明度按可读性定：浅色系 50% 足以压住花哨的壁纸，深色系要 70% 才能让
+ * 白字在浅色壁纸上站住。四套配色的文字都配白色柔光阴影 —— 浅底上它不可见，
+ * 深底上能把字托起来。
+ *
  * 原版提供完整的调色盘与对齐设置；这里保留配色与字号，对齐则不做 ——
  * RemoteViews 在 targetSdk 31+ 只允许调用带 @RemotableViewMethod 注解的方法，
  * TextView.setGravity 不在其列，动态对齐会在运行时抛异常。
@@ -23,10 +31,10 @@ object WidgetConfig {
     )
 
     val PRESETS = listOf(
-        Preset("纯白", Color.parseColor("#FFFFFF"), Color.parseColor("#37474F"), Color.parseColor("#737373")),
-        Preset("浅蓝", Color.parseColor("#E1F5FE"), Color.parseColor("#37474F"), Color.parseColor("#0288D1")),
-        Preset("深色", Color.parseColor("#2B2B2B"), Color.parseColor("#EEEEEE"), Color.parseColor("#99FFFFFF")),
-        Preset("米黄", Color.parseColor("#FFF8E1"), Color.parseColor("#4E342E"), Color.parseColor("#8D6E63")),
+        Preset("无色", Color.parseColor("#80FFFFFF"), Color.parseColor("#1A2226"), Color.parseColor("#54646D")),
+        Preset("浅蓝", Color.parseColor("#80E1F5FE"), Color.parseColor("#37474F"), Color.parseColor("#0288D1")),
+        Preset("深色", Color.parseColor("#B32B2B2B"), Color.parseColor("#EEEEEE"), Color.parseColor("#99FFFFFF")),
+        Preset("米黄", Color.parseColor("#80FFF8E1"), Color.parseColor("#4E342E"), Color.parseColor("#8D6E63")),
     )
 
     /** 可选字号（sp） */

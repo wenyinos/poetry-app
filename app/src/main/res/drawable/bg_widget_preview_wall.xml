@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  定制页预览框的示意壁纸。
+
+  四套配色都是半透明的，预览要是只给个纯色底，就完全看不出「透出壁纸」这件事。
+  这里垫一张柔和的深色渐变当假壁纸，半透明底打上去后深浅层次才显出来。
+
+  只在配置页用，不会出现在桌面上。
+-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <corners android:radius="16dp" />
+    <gradient
+        android:angle="315"
+        android:centerColor="#FF7E8FB5"
+        android:endColor="#FFD8B6C2"
+        android:startColor="#FF2E3B57"
+        android:type="linear" />
+</shape>

@@ -117,7 +117,7 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <!-- 小组件：7 款，配置见各自的 res/xml/*_info.xml -->
+        <!-- 小组件：5 款，配置见各自的 res/xml/*_info.xml -->
         <receiver
             android:name=".widget.PoetryWidgetProvider"
             android:exported="true"
@@ -140,30 +140,6 @@
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widget_lines_info" />
-        </receiver>
-
-        <receiver
-            android:name=".widget.LightPoetryWidgetProvider"
-            android:exported="true"
-            android:label="@string/widget_label_light">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-            </intent-filter>
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/widget_light_info" />
-        </receiver>
-
-        <receiver
-            android:name=".widget.DarkPoetryWidgetProvider"
-            android:exported="true"
-            android:label="@string/widget_label_dark">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-            </intent-filter>
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/widget_dark_info" />
         </receiver>
 
         <receiver

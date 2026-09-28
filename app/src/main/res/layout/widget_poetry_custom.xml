@@ -1,33 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  自定义款：颜色与字号在代码里按每个小组件的配置动态设置。
-  默认值给的是浅色款，未配置时与浅色款观感一致。
+  自定义款：半透明玻璃底，配色与字号在代码里按每个小组件的配置动态设置。
+
+  三层叠放，顺序不能乱：
+    1. widget_tint  —— 配色给的半透明底色，代码 setBackgroundColor 打在它身上
+    2. widget_glass —— 固定的柔光与高光描边，压住底色做出磨砂质感
+    3. 文字层        —— 最上面，不受下面两层影响
+
+  底色之所以不直接打在根布局上：setBackgroundColor 会把根布局的 drawable 背景
+  整个换掉，那样这层质感就没了。文字统一带白色柔光阴影，浅色底上它不可见，
+  深色底上把字从壁纸里托起来。
 -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/widget_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_widget_light"
-    android:orientation="vertical"
-    android:padding="12dp">
+    android:background="@android:color/transparent">
 
-    <TextView
-        android:id="@+id/widget_content"
+    <View
+        android:id="@+id/widget_tint"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:ellipsize="end"
-        android:maxLines="5"
-        android:textColor="@color/color_text_body"
-        android:textSize="14sp" />
+        android:layout_height="match_parent" />
 
-    <TextView
-        android:id="@+id/widget_source"
+    <View
+        android:id="@+id/widget_glass"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:textColor="@color/color_text_default"
-        android:textSize="11sp" />
-</LinearLayout>
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_widget_glass_overlay" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="12dp">
+
+        <TextView
+            android:id="@+id/widget_content"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:maxLines="5"
+            android:shadowColor="#59FFFFFF"
+            android:shadowDx="0"
+            android:shadowDy="1"
+            android:shadowRadius="6"
+            android:textColor="@color/color_text_body"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/widget_source"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:shadowColor="#59FFFFFF"
+            android:shadowDx="0"
+            android:shadowDy="1"
+            android:shadowRadius="6"
+            android:textColor="@color/color_text_default"
+            android:textSize="11sp" />
+    </LinearLayout>
+</FrameLayout>

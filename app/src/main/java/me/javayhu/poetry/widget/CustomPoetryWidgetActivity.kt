@@ -98,7 +98,8 @@ class CustomPoetryWidgetActivity : AppCompatActivity() {
 
     private fun renderPreview() {
         val colors = config.colors
-        binding.previewBox.setBackgroundColor(colors.background)
+        // 底色打在 tint 层上，它下面还垫着示意壁纸，这样半透明才看得出来
+        binding.previewTint.setBackgroundColor(colors.background)
         binding.previewContent.setTextColor(colors.content)
         binding.previewContent.textSize = config.textSize
         binding.previewSource.setTextColor(colors.source)
