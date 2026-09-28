@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  定制微件「浅蓝」配色：底色 + 柔光 + 1dp 高光描边，全部是静态内容。
+
+  为什么把配色做成静态图而不是代码设色：setBackgroundColor 会连根布局的
+  drawable 背景一起换掉，圆角和描边就保不住了。改成四张现成的背景图，
+  由代码用 setViewVisibility 切换，视觉和可靠性两头都占住。
+
+  这里只用线性渐变与描边 —— 径向渐变、FrameLayout、<View> 标签这类
+  原版微件没出现过的写法都避开，它们会让桌面进程加载微件失败。
+-->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- 底色 -->
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="16dp" />
+            <solid android:color="#80E1F5FE" />
+        </shape>
+    </item>
+
+    <!-- 左上到右下的柔光，做磨砂玻璃的受光感 -->
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="16dp" />
+            <gradient
+                android:angle="315"
+                android:endColor="#00FFFFFF"
+                android:startColor="#33FFFFFF"
+                android:type="linear" />
+        </shape>
+    </item>
+
+    <!-- 高光描边 -->
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="16dp" />
+            <solid android:color="#00000000" />
+            <stroke
+                android:width="1dp"
+                android:color="#59FFFFFF" />
+        </shape>
+    </item>
+</layer-list>

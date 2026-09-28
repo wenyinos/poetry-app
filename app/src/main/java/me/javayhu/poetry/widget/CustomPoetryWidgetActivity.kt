@@ -61,7 +61,7 @@ class CustomPoetryWidgetActivity : AppCompatActivity() {
                 layoutParams = LinearLayout.LayoutParams(size, size).apply { marginEnd = gap }
                 background = GradientDrawable().apply {
                     shape = GradientDrawable.OVAL
-                    setColor(preset.background)
+                    setColor(preset.swatch)
                     // 选中的加品牌色描边
                     setStroke(
                         (if (index == config.preset) 4 else 1) * resources.displayMetrics.density.toInt(),
@@ -98,8 +98,8 @@ class CustomPoetryWidgetActivity : AppCompatActivity() {
 
     private fun renderPreview() {
         val colors = config.colors
-        // 底色打在 tint 层上，它下面还垫着示意壁纸，这样半透明才看得出来
-        binding.previewTint.setBackgroundColor(colors.background)
+        // 背景图自带底色、柔光与描边；下面垫着示意壁纸，半透明才看得出来
+        binding.previewTint.setBackgroundResource(colors.background)
         binding.previewContent.setTextColor(colors.content)
         binding.previewContent.textSize = config.textSize
         binding.previewSource.setTextColor(colors.source)

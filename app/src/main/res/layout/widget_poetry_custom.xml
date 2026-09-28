@@ -2,31 +2,52 @@
 <!--
   自定义款：半透明玻璃底，配色与字号在代码里按每个小组件的配置动态设置。
 
-  三层叠放，顺序不能乱：
-    1. widget_tint  —— 配色给的半透明底色，代码 setBackgroundColor 打在它身上
-    2. widget_glass —— 固定的柔光与高光描边，压住底色做出磨砂质感
-    3. 文字层        —— 最上面，不受下面两层影响
+  四层叠放，顺序不能乱（RelativeLayout 里后声明的画在上面）：
+    1~4. 四张配色背景，同一时刻只显示一张，由代码 setViewVisibility 切换
+    5.   文字层
 
-  底色之所以不直接打在根布局上：setBackgroundColor 会把根布局的 drawable 背景
-  整个换掉，那样这层质感就没了。文字统一带白色柔光阴影，浅色底上它不可见，
-  深色底上把字从壁纸里托起来。
+  为什么把配色做成四张静态背景图，而不是用代码 setBackgroundColor 打底色：
+  那样会把根布局的 drawable 背景整个换掉，圆角与描边就没了。做成现成的图
+  由 setViewVisibility 切换，既保住了圆角描边，也不引入任何新调用。
+
+  为什么是 RelativeLayout + ImageView：RemoteViews 只认有限的几个类。
+  原版微件（一直正常工作的那批）用的就是 ImageView / LinearLayout /
+  RelativeLayout / TextView。改用 FrameLayout 或 <View> 标签会让桌面进程
+  加载失败，直接显示「An error occurred when loading widget」。
+
+  文字统一带白色柔光阴影：浅色底上它不可见，深色底上把字从壁纸里托起来。
 -->
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/widget_root"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@android:color/transparent">
+    android:layout_height="match_parent">
 
-    <View
-        android:id="@+id/widget_tint"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-    <View
-        android:id="@+id/widget_glass"
+    <ImageView
+        android:id="@+id/widget_bg_none"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/bg_widget_glass_overlay" />
+        android:background="@drawable/bg_widget_custom_none"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/widget_bg_blue"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_widget_custom_blue" />
+
+    <ImageView
+        android:id="@+id/widget_bg_dark"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_widget_custom_dark"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/widget_bg_beige"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_widget_custom_beige"
+        android:visibility="gone" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -62,4 +83,4 @@
             android:textColor="@color/color_text_default"
             android:textSize="11sp" />
     </LinearLayout>
-</FrameLayout>
+</RelativeLayout>

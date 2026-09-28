@@ -30,6 +30,12 @@
 
 ### 修复
 
+- **定制款微件加载失败（v4.1.1 引入）**：为做玻璃质感，三款定制微件的布局用了
+  `FrameLayout` 与 `<View>` 标签，而 RemoteViews 只认有限的几个类，桌面进程
+  加载不了这种布局，会直接显示「An error occurred when loading widget」。
+  现已改用 `RelativeLayout` + `ImageView` —— 与其余微件一致的写法。
+  同时把配色做成四张现成的背景图，由 `setViewVisibility` 切换，既保住圆角与
+  描边，也不必再调用 `setBackgroundColor`（它会连背景图一起换掉）。
 - **标题栏与状态栏重叠**：edge-to-edge 下若让位逻辑赶不上系统首次派发 insets，
   工具栏就不会加高，标题会被状态栏压住。现已提前挂载监听并主动补发一次。
 - **定制页预览框占满屏幕**：预览框的两层背景用了 match_parent，而 wrap_content 的父容器

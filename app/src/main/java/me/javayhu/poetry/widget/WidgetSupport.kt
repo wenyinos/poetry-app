@@ -49,8 +49,13 @@ object WidgetSupport {
         val config = WidgetConfig.load(context, widgetId)
         val colors = config.colors
 
-        // 底色打在内层：根布局要留给上面那层柔光描边
-        views.setInt(R.id.widget_tint, "setBackgroundColor", colors.background)
+        // 四张配色背景各就各位，只显示选中的那张 —— 背景图里已经带了圆角与描边，
+        // 用 setBackgroundColor 会在换掉背景的同时把这些一起抹掉
+        for ((index, viewId) in BACKGROUND_VIEWS.withIndex()) {
+            views.setViewVisibility(
+                viewId, if (index == config.preset) View.VISIBLE else View.GONE
+            )
+        }
         views.setTextColor(R.id.widget_content, colors.content)
         views.setTextColor(R.id.widget_source, colors.source)
         views.setTextViewTextSize(
@@ -67,6 +72,14 @@ object WidgetSupport {
         }
         return views
     }
+
+    /** 四套配色对应的背景层，下标与 WidgetConfig.PRESETS 一致 */
+    private val BACKGROUND_VIEWS = intArrayOf(
+        R.id.widget_bg_none,
+        R.id.widget_bg_blue,
+        R.id.widget_bg_dark,
+        R.id.widget_bg_beige,
+    )
 
     /** 小组件高度有限，只取前几行非空内容 */
     fun leadingLines(text: String, maxLines: Int): String =
