@@ -33,8 +33,15 @@
                 android:textColor="@color/color_text_default"
                 android:textSize="13sp" />
 
-            <!-- 预览框：假壁纸上叠半透明底色，再叠玻璃质感，与桌面上的层次一致 -->
-            <FrameLayout
+            <!--
+              预览框：假壁纸上叠半透明底色，再叠玻璃质感，与桌面上的层次一致。
+
+              必须用 ConstraintLayout：两层背景要铺满预览框，但在 FrameLayout 里
+              wrap_content 的父容器会被 match_parent 的子 View 撑开（普通 View 在
+              AT_MOST 下取的是最大可用高度），预览框会一路长到满屏，下面的配色、
+              字号、完成按钮全被顶出屏幕。0dp + 四向约束才是「跟随父容器且不撑大」。
+            -->
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -43,19 +50,31 @@
 
                 <View
                     android:id="@+id/previewTint"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <View
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/bg_widget_glass_overlay" />
+                    android:id="@+id/previewGlass"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:background="@drawable/bg_widget_glass_overlay"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="14dp">
+                    android:padding="14dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
 
                     <TextView
                         android:id="@+id/previewContent"
@@ -83,7 +102,7 @@
                         android:textColor="@color/color_text_default"
                         android:textSize="11sp" />
                 </LinearLayout>
-            </FrameLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <TextView
                 android:layout_width="match_parent"
