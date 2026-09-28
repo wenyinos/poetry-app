@@ -28,9 +28,17 @@ import me.javayhu.poetry.R
 internal class EdgeToEdgeCallbacks : Application.ActivityLifecycleCallbacks {
 
     override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
-        val decor = activity.window?.decorView ?: return
-        // onCreate 期间布局可能尚未挂载，等一帧再取视图
-        decor.post { apply(activity) }
+        // onCreate 返回时 setContentView 已执行，布局是现成的，直接套用 ——
+        // 这样监听器赶在首次 insets 分发之前装好，不依赖补发
+        apply(activity)
+        // 个别页面可能更晚才挂载布局，下一帧再补一次（重复设置监听器是幂等的）
+        activity.window?.decorView?.post { apply(activity) }
+    }
+
+    override fun onActivityStarted(activity: Activity) {
+        // 兜底：页面可见时视图必定已 attach，此时补要一次 insets 一定拿得到真实值。
+        // 首次分发若早于监听器安装，就靠这一步把工具栏的高度补上。
+        apply(activity)
     }
 
     private fun apply(activity: Activity) {
@@ -57,6 +65,8 @@ internal class EdgeToEdgeCallbacks : Application.ActivityLifecycleCallbacks {
             v.updateLayoutParams { height = base + top }
             insets
         }
+        // 监听器装晚了就赶不上这一次分发，主动要一次
+        ViewCompat.requestApplyInsets(this)
     }
 
     /** 根布局底部让出导航栏高度 */
@@ -66,6 +76,7 @@ internal class EdgeToEdgeCallbacks : Application.ActivityLifecycleCallbacks {
             v.updatePadding(bottom = bottom)
             insets
         }
+        ViewCompat.requestApplyInsets(this)
     }
 
     /** 没有工具栏的页面（启动页）整体让出系统栏与刘海区域 */
@@ -77,6 +88,7 @@ internal class EdgeToEdgeCallbacks : Application.ActivityLifecycleCallbacks {
             v.updatePadding(bars.left, bars.top, bars.right, bars.bottom)
             insets
         }
+        ViewCompat.requestApplyInsets(this)
     }
 
     /** 从主题取 actionBarSize，比读 layoutParams 更可靠（后者可能尚未解析） */
@@ -89,7 +101,6 @@ internal class EdgeToEdgeCallbacks : Application.ActivityLifecycleCallbacks {
         }
     }
 
-    override fun onActivityStarted(activity: Activity) = Unit
     override fun onActivityResumed(activity: Activity) = Unit
     override fun onActivityPaused(activity: Activity) = Unit
     override fun onActivityStopped(activity: Activity) = Unit
